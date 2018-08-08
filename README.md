@@ -1,2 +1,0 @@
-# cryptonite
-Open Source Cryptonite
