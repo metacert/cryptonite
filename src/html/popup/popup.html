@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/js/lib/jquery-3.3.1.min.js"></script>
+    <script src="/js/lib/i18n.js"></script>
+    <script src="/js/lib/jquery.i18n.js"></script>
+    <script src="/js/utils/propertyDAO.js"></script>
+    <script src="/js/utils/cryptoniteUtils.js"></script>
+    <script src="/js/background/configSettings.js"></script>
+    <script src="/js/popup/popup.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/cryptonite.css" />
+</head>
+
+<body class="cryptonite-popup-body">
+  <ul id="cryptonite-options-list" class="cryptonite-options-list">
+    <li class="cryptonite-first" rel="i18n[popup.title]"></li>
+    <li>
+      <a href="https://metacertprotocol.com/?via=cryptonite" rel="i18n[popup.tokens]" target="_blank"></a>
+    </li>
+    <li>
+      <a id="cryptonite-go-to-bookmarks" href="#">
+        <span rel="i18n[popup.bookmarks]"></span>
+        <span class="cryptonite-bookmarks-arrow">></span></a>
+    </li>
+    <li>
+      <a id="cryptonite-go-to-history" href="#">
+        <span rel="i18n[popup.history]"></span>
+        <span class="cryptonite-history-arrow">></span></a>
+    </li>
+    <li>
+      <a id="cryptonite-go-to-options" href="#" rel="i18n[popup.options]"></a>
+    </li>
+    <li>
+      <a id="cryptonite-rate-us" href="#" rel="i18n[popup.rateus]" target="_blank"></a>
+    </li>
+    <li>
+      <a href="https://metacert.uservoice.com/forums/906502-cryptonite-browser-extension/?utm_source=CryptoniteByMetaCert" rel="i18n[popup.support.feedback]" target="_blank"></a>
+    </li>
+    <li>
+      <a href="https://developer.metacert.com/api-documentation/legal/privacy-policy-for-cryptonite-browser-add-on/?utm_source=CryptoniteByMetaCert" rel="i18n[popup.privacyPolicy]" target="_blank"></a>
+    </li>
+    <li>
+      <a href="https://metacert.com/?utm_source=CryptoniteByMetaCert" rel="i18n[popup.powered]" target="_blank"></a>
+    </li>
+  </ul>
+
+  <ul id="cryptonite-bookmarks-list" class="cryptonite-options-list">
+    <li class="cryptonite-first" rel="i18n[popup.bookmarks]"></li>
+    <li>
+      <a class="cryptonite-go-to-main-menu" href="#">
+        <span class="cryptonite-main-menu-arrow"><</span>
+        <span rel="i18n[popup.mainMenu]"></span>
+      </a>
+    </li>
+    <div id="cryptonite-bookmarks-list-items">
+      <li>
+        <a href="https://www.bitfinex.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://www.bitfinex.com/assets/favicon.ico"></img>
+          <span>bitfinex.com</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://bittrex.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://bittrex.com/Content/img/logos/bittrex.ico"></img>
+          <span>bittrex.com</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://cex.io/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://cex.io/img/favicon32.png"></img>
+          <span>cex.io</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.coinbase.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://www.coinbase.com/favicon.ico"></img>
+          <span>coinbase.com</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://etherdelta.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://etherdelta.com/images/favicon.ico"></img>
+          <span>etherdelta.com</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.kraken.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://www.kraken.com/img/favicon.ico"></img>
+          <span>kraken.com</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.metacertprotocol.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://www.google.com/s2/favicons?domain=https://metacert.com"></img>
+          <span>metacertprotocol.com</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://myetherwallet.com/?utm_source=CryptoniteByMetaCert" target="_blank">
+          <img class="cryptonite-favicon-image" src="https://www.myetherwallet.com/images/fav/favicon.ico"></img>
+          <span>myetherwallet.com</span>
+        </a>
+      </li>
+    </div>
+  </ul>
+
+  <ul id="cryptonite-history-list" class="cryptonite-options-list">
+    <li class="cryptonite-first" rel="i18n[popup.history.title]"></li>
+    <li>
+      <a class="cryptonite-go-to-main-menu" href="#">
+        <span class="cryptonite-main-menu-arrow"><</span>
+        <span rel="i18n[popup.mainMenu]"></span>
+      </a>
+    </li>
+    <div id="cryptonite-history-empty-list">
+      <div class="cryptonite-history-empty-image-container"><img class="cryptonite-history-empty-image"></img></div>
+      <div class="cryptonite-history-empty-description" rel="i18n[popup.history.empty]"></div>
+    </div>
+    <div id="cryptonite-history-list-items"></div>
+  </ul>
+</body>
+</html>
