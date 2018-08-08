@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title rel="i18n[options.title]"></title>
+    <link rel="stylesheet" type="text/css" href="/css/options/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/css/options/side-menu.css" />
+    <link rel="stylesheet" type="text/css" href="/css/options/options.css" />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script defer type="text/javascript" src="/js/lib/jquery-3.3.1.min.js"></script>
+    <script defer type="text/javascript" src="/js/lib/i18n.js"></script>
+    <script defer type="text/javascript" src="/js/lib/jquery.i18n.js"></script>
+    <script defer type="text/javascript" src="/js/options/options.js"></script>
+    <script defer type="text/javascript" src="/js/utils/propertyDAO.js"></script>
+    <script defer type="text/javascript" src="/js/background/configSettings.js"></script>
+    <script defer type="text/javascript" src="/js/background/api/metacertApi.js"></script>
+    <script defer type="text/javascript" src="/js/utils/cryptoniteUtils.js"></script>
+</head>
+<body>
+<div id="cryptonite-layout">
+    <!-- Menu toggle -->
+    <a href="#cryptonite-menu" id="cryptonite-menuLink" class="cryptonite-menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="cryptonite-menu">
+        <div class="cryptonite-pure-menu">
+            <!-- <a class="pure-menu-heading" href="#">MetaCert</a> -->
+            <ul class="cryptonite-pure-menu-list">
+              <li class="cryptonite-pure-menu-item cryptonite-selected" id="cryptonite-settings">
+                <a class="cryptonite-pure-menu-link" href="#" rel="i18n[options.nav.settings]"></a>
+              </li>
+              <li class="cryptonite-pure-menu-item" id="cryptonite-chatbot">
+                <a class="cryptonite-pure-menu-link" href="#" rel="i18n[options.nav.chatbot]"></a>
+              </li>
+              <li class="cryptonite-pure-menu-item">
+                <a class="cryptonite-pure-menu-link" target="_blank" href="https://metacert.uservoice.com/forums/906502-cryptonite-browser-extension" rel="i18n[options.nav.support]"></a>
+              </li>
+              <li class="cryptonite-pure-menu-item">
+                <a id="cryptonite-rate-us" class="cryptonite-pure-menu-link" target="_blank" href="#" rel="i18n[options.nav.rateus]"></a>
+              </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="cryptonite-main">
+        <div id="cryptonite-headline" rel="i18n[options.title]"></div>
+        <div id="cryptonite-settings-wrapper" class="cryptonite-prefs-page-content">
+            <div class="cryptonite-subsection">
+                <div class="cryptonite-left-group">
+                  <div class="cryptonite-section-title" rel="i18n[options.explain.green.shield.title]"></div>
+                    <div class="cryptonite-hint" rel="i18n[options.explain.green.shield.description.1]"></div>
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.explain.green.shield.description.2]"></span>
+                        <a href="https://medium.com/@Paul__Walsh/how-metacert-verifies-domains-for-cryptonite-a61864662546" target="_blank">
+                            <span rel="i18n[options.explain.green.shield.description.2.link]"></span>
+                        </a>
+                    </div>
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.explain.green.shield.description.3]"></span>
+                        <a href="https://twitter.com/metacert" target="_blank">
+                            <span rel="i18n[options.explain.green.shield.description.3.link]"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="cryptonite-right-group">
+                </div>
+            </div>
+            <div class="cryptonite-subsection">
+                <div class="cryptonite-left-group">
+                    <div class="cryptonite-section-title" rel="i18n[options.enable.all.annotations]"></div>
+                    <div class="cryptonite-hint" rel="i18n[options.enable.all.annotations.hint]"></div>
+                </div>
+                <div class="cryptonite-right-group">
+                    <div id="cryptonite-slider">
+                        <input id="PROP_ENABLE_BANNER_ANNOTATION_IGNORE" type="radio" name="PROP_ENABLE_BANNER_ANNOTATION" value="ignore"/>
+                        <label for="PROP_ENABLE_BANNER_ANNOTATION_IGNORE" class="cryptonite-hint cryptonite-radioLabel" rel="i18n[options.enable.slider.label.ignore]"></label>
+                        <input id="PROP_ENABLE_BANNER_ANNOTATION_HIGHLIGHT" type="radio" name="PROP_ENABLE_BANNER_ANNOTATION" value="highlight"/>
+                        <label for="PROP_ENABLE_BANNER_ANNOTATION_HIGHLIGHT" class="cryptonite-hint cryptonite-radioLabel" rel="i18n[options.enable.slider.label.highlight]"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="cryptonite-subsection">
+                <div class="cryptonite-left-group">
+                    <div class="cryptonite-section-title" rel="i18n[options.enable.twitter.mentions.annotations]"></div>
+                    <div class="cryptonite-hint" rel="i18n[options.enable.twitter.mentions.annotations.hint]"></div>
+                </div>
+                <div class="cryptonite-right-group">
+                    <div id="cryptonite-slider">
+                        <input id="PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS_IGNORE" type="radio" name="PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS" value="ignore"/>
+                        <label for="PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS_IGNORE" class="cryptonite-hint cryptonite-radioLabel" rel="i18n[options.enable.slider.label.ignore]"></label>
+                        <input id="PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS_HIGHLIGHT" type="radio" name="PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS" value="highlight"/>
+                        <label for="PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS_HIGHLIGHT" class="cryptonite-hint cryptonite-radioLabel" rel="i18n[options.enable.slider.label.highlight]"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="cryptonite-chatbot-wrapper" class="cryptonite-prefs-page-content">
+            <div class="cryptonite-subsection">
+                <div class="cryptonite-left-group">
+                    <div class="cryptonite-section-title" rel="i18n[options.metatokens.title]"></div>
+                    <div class="cryptonite-hint" id="cryptonite-options-metatokens-text-01" rel="i18n[options.metatokens.hint.01]"></div>
+                    <div class="cryptonite-hint" id="cryptonite-options-metatokens-text-02" rel="i18n[options.metatokens.hint.02]"></div>
+                    <div class="cryptonite-hint" id="cryptonite-options-metatokens-text-03"></div>
+                </div>
+                <div class="cryptonite-right-group"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script defer type="text/javascript" src="/js/options/side-menu.js"></script>
+</body>
+</html>

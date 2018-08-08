@@ -1,0 +1,36 @@
+{
+  "name": "metacert-cryptonite",
+  "version": "1.0.0",
+  "description": "Cryptonite Extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metacert/cryptonite.git"
+  },
+  "keywords": [
+    "cryptonite",
+    "metacert"
+  ],
+  "author": "MetaCert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/metacert/cryptonite/issues"
+  },
+  "homepage": "https://github.com/metacert/cryptonite#readme",
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-jsdoc": "^2.2.1",
+    "grunt-shell": "^2.1.0"
+  },
+  "dependencies": {
+    "grunt-exec": "^3.0.0",
+    "grunt-jslint": "^1.1.15",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc-to-markdown": "^4.0.1"
+    "jshint": "^2.9.5",
+    "jslint": "^0.12.0"
+  }
+}

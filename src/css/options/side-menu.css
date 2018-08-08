@@ -1,0 +1,240 @@
+.cryptonite-pure-img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+/*
+Add transition to containers so they can push in and out.
+*/
+#cryptonite-layout,
+#cryptonite-menu,
+.cryptonite-menu-link {
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+/*
+This is the parent `<div>` that contains the menu and the content area.
+*/
+#cryptonite-layout {
+    position: relative;
+    left: 0;
+    padding-left: 0;
+}
+    #cryptonite-layout.active #cryptonite-menu {
+        left: 250px;
+        width: 250px;
+    }
+
+    #cryptonite-layout.active .cryptonite-menu-link {
+        left: 250px;
+    }
+/*
+The content `<div>` is where all your content goes.
+*/
+.cryptonite-content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+}
+
+.cryptonite-header {
+     margin: 0;
+     color: #333;
+     text-align: center;
+     padding: 2.5em 2em 0;
+     border-bottom: 1px solid #eee;
+ }
+    .cryptonite-header h1 {
+        margin: 0.2em 0;
+        font-size: 3em;
+        font-weight: 300;
+    }
+     .cryptonite-header h2 {
+        font-weight: 300;
+        color: #ccc;
+        padding: 0;
+        margin-top: 0;
+    }
+
+.cryptonite-content-subhead {
+    margin: 50px 0 20px 0;
+    font-weight: 300;
+    color: #888;
+}
+
+
+
+/*
+The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
+appears on the left side of the page.
+*/
+
+#cryptonite-menu {
+    margin-left: -250px; /* "#menu" width */
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000; /* so the menu or its navicon stays above all content */
+    background: #cbd0d5;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+    /*
+    All anchors inside the menu should be styled like this.
+    */
+    #cryptonite-menu a {
+        border: none;
+    }
+
+    /*
+    Remove all background/borders, since we are applying them to #menu.
+    */
+     #cryptonite-menu .cryptonite-pure-menu,
+     #cryptonite-menu .cryptonite-pure-menu ul {
+        border: none;
+        background-color: transparent;
+    }
+
+    /*
+    Add that light border to separate items into groups.
+    */
+    #cryptonite-menu .cryptonite-pure-menu ul,
+    #cryptonite-menu .cryptonite-pure-menu .cryptonite-menu-item-divided {
+        /* border-top: 1px solid #333; */
+        border: none;
+    }
+        /*
+        Change color of the anchor links on hover/focus.
+        */
+        #cryptonite-menu .cryptonite-pure-menu li a:hover,
+        #cryptonite-menu .cryptonite-pure-menu li a:focus {
+        }
+
+    /*
+    This styles the selected menu item `<li>`.
+    */
+    #cryptonite-menu .cryptonite-pure-menu-selected,
+    #cryptonite-menu .cryptonite-pure-menu-heading {
+        background: #1f8dd6;
+    }
+        /*
+        This styles a link within a selected menu item `<li>`.
+        */
+        #cryptonite-menu .cryptonite-pure-menu-selected a {
+            color: #fff;
+        }
+
+    /*
+    This styles the menu heading.
+    */
+    #cryptonite-menu .cryptonite-pure-menu-heading {
+        font-size: 110%;
+        color: #fff;
+        margin: 0;
+    }
+
+/* -- Dynamic Button For Responsive Menu -------------------------------------*/
+
+/*
+The button to open/close the Menu is custom-made and not part of Pure. Here's
+how it works:
+*/
+
+/*
+`.menu-link` represents the responsive menu toggle that shows/hides on
+small screens.
+*/
+.cryptonite-menu-link {
+    position: fixed;
+    display: block; /* show this only on small screens */
+    top: 0;
+    left: 0; /* "#menu width" */
+    background: #cbd0d5;
+    font-size: 10px; /* change this value to increase/decrease button size */
+    z-index: 10;
+    width: 2em;
+    height: auto;
+    padding: 2.1em 1.6em;
+}
+
+    .cryptonite-menu-link:hover,
+    .cryptonite-menu-link:focus {
+    }
+
+    .cryptonite-menu-link span {
+        position: relative;
+        display: block;
+    }
+
+    .cryptonite-menu-link span,
+    .cryptonite-menu-link span:before,
+    .cryptonite-menu-link span:after {
+        background-color: #fff;
+        width: 100%;
+        height: 0.2em;
+    }
+
+        .cryptonite-menu-link span:before,
+        .cryptonite-menu-link span:after {
+            position: absolute;
+            margin-top: -0.6em;
+            content: " ";
+        }
+
+        .cryptonite-menu-link span:after {
+            margin-top: 0.6em;
+        }
+
+
+/* -- Responsive Styles (Media Queries) ------------------------------------- */
+
+/*
+Hides the menu at `48em`, but modify this based on your app's needs.
+*/
+@media (min-width: 48em) {
+
+    .cryptonite-header,
+    .cryptonite-content {
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+
+    #cryptonite-layout {
+        padding-left: 250px; /* left col width "#menu" */
+        left: 0;
+    }
+    #cryptonite-menu {
+        left: 250px;
+    }
+
+    .cryptonite-menu-link {
+        position: fixed;
+        left: 250px;
+        display: none;
+    }
+
+    #cryptonite-layout.active .cryptonite-menu-link {
+        left: 250px;
+    }
+}
+
+@media (max-width: 48em) {
+    /* Only apply this when the window is small. Otherwise, the following
+    case results in extra padding on the left:
+        * Make the window small.
+        * Tap the menu to trigger the active state.
+        * Make the window large again.
+    */
+    #cryptonite-layout.active {
+        position: relative;
+        left: 250px;
+    }
+}

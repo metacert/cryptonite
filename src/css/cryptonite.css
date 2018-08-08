@@ -1,0 +1,318 @@
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  src: url('chrome-extension://__MSG_@@extension_id__/fonts/montserrat/regular/Montserrat-Regular.ttf');
+}
+
+/* a little trick to download the font on Firefox */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/montserrat/regular/Montserrat-Regular.ttf');
+}
+
+.cryptonite-popup-body {
+  width: 350px;
+  min-height: 330px;
+  max-height: 600px;
+}
+
+/* pop up styles */
+.cryptonite-options-list {
+  text-transform: uppercase;
+  list-style: none;
+  padding: 0px;
+  margin: 0px 0px 3px 0px;
+  font: 10pt arial;
+  letter-spacing: 1px;
+  color: #7e7e7e;
+}
+
+.cryptonite-options-list li {
+  padding: 12px 18px;
+}
+
+.cryptonite-options-list li.cryptonite-first {
+  background-color: #f8f9fa;
+  font: 12pt arial;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.cryptonite-options-list a, .cryptonite-options-list a:visited {
+  color: #7e7e7e;
+  text-decoration: none;
+  outline: none;
+}
+
+#cryptonite-bookmarks-list a,
+#cryptonite-history-list a {
+  display: inline-flex;
+}
+
+#cryptonite-bookmarks-list-items a,
+#cryptonite-history-list-items a {
+  text-transform: lowercase;
+  text-decoration: underline;
+}
+
+input[type=checkbox]:hover {
+  cursor: pointer;
+}
+
+.cryptonite-history-empty-image-container {
+  text-align: center;
+}
+
+.cryptonite-history-empty-image {
+  width: 48px;
+  height: 56px;
+  margin: 20px 0px 10px 0px;
+}
+
+.cryptonite-favicon-image {
+  width: 20px;
+  height: 20px;
+  margin: 0px 10px 0px 0px;
+}
+
+.cryptonite-favicon-image {
+  width: 16px;
+  height: 16px;
+  margin: 0px 10px 0px 0px;
+}
+
+#cryptonite-bookmarks-list,
+#cryptonite-history-list,
+#cryptonite-history-empty-list,
+#cryptonite-history-list-items {
+  display: none;
+}
+
+#cryptonite-history-list-items {
+  word-break: break-all;
+}
+
+.cryptonite-history-empty-description {
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.cryptonite-main-menu-arrow {
+  margin-right: 5px;
+}
+
+.cryptonite-bookmarks-arrow,
+.cryptonite-history-arrow {
+  float: right;
+}
+/* pop up styles */
+
+/* top banner annotation */
+.cryptonite-website-annotation-wrapper {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  width: 100%;
+  height: 50px;
+  top: 0px;
+  left: 0px;
+  margin: 0px;
+  overflow: hidden;
+  position: fixed;
+  text-align: center;
+  z-index: 2147483646;
+  font-weight: 500;
+  font-family: Montserrat, Verdana, Geneva, sans-serif;
+  font-size: 14px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cryptonite-website-annotation-wrapper span {
+  line-height: 50px;
+}
+
+.cryptonite-website-annotation-wrapper .cryptonite-website-annotation-close {
+  display: inline-block;
+  cursor: pointer;
+  float: right;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
+  margin: 0px;
+  padding: 0px;
+  line-height: 12px;
+  font-size: 16px;
+  margin: 15px 20px 15px 15px;
+  padding: 2px;
+  box-sizing: content-box;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.cryptonite-website-annotation-wrapper .cryptonite-website-annotation-close-message {
+  display: inline-block;
+  cursor: pointer;
+  margin: 0px;
+  padding: 0px;
+  line-height: 50px;
+  font-size: 12px;
+  position: absolute;
+  right: 30px;
+  text-decoration: underline;
+}
+
+.cryptonite-website-annotation-shift {
+  padding-top: 50px !important;
+}
+/* top banner annotation */
+
+.cryptonite-cryptocurrency {
+  background-color: #00AA6B;
+  color: #FFFFFF;
+}
+
+/* extension updated annotation */
+div.cryptonite-website-extension-updated-wrapper,
+div.cryptonite-website-extension-updated-wrapper * {
+  flex: unset !important;
+  flex-flow: unset !important;
+}
+
+div.cryptonite-website-extension-updated-content * {
+  display: block;
+}
+
+div.cryptonite-website-extension-updated-content a {
+  display: inline-block;
+}
+
+.cryptonite-website-extension-updated-wrapper,
+.cryptonite-website-extension-installed-wrapper {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  width: 100%;
+  min-height: 100px;
+  height: auto;
+  top: 0px;
+  left: 0px;
+  margin: 0px;
+  overflow: hidden;
+  position: fixed;
+  text-align: center;
+  z-index: 2147483647;
+  font-weight: 500;
+  font-family: Helvetica, Verdana, Geneva, sans-serif !important;
+  font-size: 16px;
+  vertical-align: middle;
+  letter-spacing: 1px;
+}
+
+.cryptonite-website-extension-updated-content {
+  display: flex;
+  padding-bottom: 22px;
+  padding-top: 22px;
+  padding-left: 0px;
+  padding-right: 11px;
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-left {
+  margin: 11px 22px 15px 30px;
+  width: 80px;
+  height: 80px;
+  float: left;
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-left img {
+  height: 80px;
+  width: auto;
+  max-width: none;
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-right {
+  padding: 10px;
+  width: 100%;
+  min-height: 80px;
+  height: 100%;
+  float: left;
+  text-align: left;
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-right .cryptonite-extension-updated-title {
+  font-size: 24px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-right .cryptonite-extension-updated-description {
+  font-size: 16px;
+  margin: 0px 60px 5px 0px;
+  line-height: 1.4em;
+  justify-content: center;
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-right .cryptonite-extension-updated-description-link {
+
+}
+
+.cryptonite-annotation-extension-updated .cryptonite-extension-updated-close,
+.cryptonite-annotation-extension-updated .cryptonite-extension-installed-close {
+  float: right;
+  font-size: 30px;
+  margin: 0px 20px 15px 20px;
+  padding: 0px;
+  cursor: pointer;
+}
+
+.cryptonite-annotation-extension-updated a,
+.cryptonite-annotation-extension-updated a:hover,
+.cryptonite-annotation-extension-updated a:visited {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+.cryptonite-extension-updated {
+  background-color: #00AA6B;
+  color: #ffffff;
+}
+
+.cryptonite-link-annotation {
+  padding: 0px 2px 0px 1px;
+}
+
+.js-tweet-stats-container .cryptonite-link-annotation {
+  padding: 0px 2px 0px 10px;
+  float: left;
+}
+
+.cryptonite-bells-image {
+  width: 4px;
+  height: 4px;
+  display: inline;
+  vertical-align: top;
+  padding: 2% 0px 0px 0px;
+}
+
+.username .cryptonite-bells-image,
+.twitter-atreply .cryptonite-bells-image {
+}
+
+.js-profile-popup-actionable .cryptonite-bells-image {
+  padding: 7px 0px 0px 0px;
+}
+
+.stream-item-header .cryptonite-bells-image {
+  width: 16px;
+  height: 16px;
+  padding: 1px 0px 0px 0px;
+}
+/* extension updated annotation */
+
+/* let us hide all the Beta Program UI */
+.cryptonite-beta-program {
+  display: none !important;
+}
