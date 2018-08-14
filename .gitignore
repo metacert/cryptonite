@@ -1,0 +1,15 @@
+.DS_Store
+*.kpf
+*.komodoproject
+/signing
+.idea
+node_modules
+package-lock.json
+doc
+*.crx
+*.zip
+*.xpi
+*.md
+grunt-jslint-results.log
+jslint-results.log
+results.log
