@@ -389,5 +389,16 @@ var ConfigSettings = {
     "https://eosdac.io/airdrop/",
     "https://www.myetherwallet.com/",
     "https://myetherwallet.com/"
-  ]
+  ],
+
+  /**
+   * Initiliazes the object.
+   */
+  _init : function() {
+  }
 };
+
+/**
+ * Constructor.
+ */
+(function() { this._init(); }).apply(ConfigSettings);

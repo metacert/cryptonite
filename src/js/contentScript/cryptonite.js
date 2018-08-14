@@ -210,7 +210,7 @@ Cryptonite.prototype = {
       '<a href="https://t.me/metacert" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("website_annotation_extension_updated_description_link_02") + '</a>';
     var annotationDescriptionText01 = $.i18n.getString("website_annotation_extension_updated_description_01");
     var annotationDescriptionText02 = $.i18n.getString("website_annotation_extension_updated_description_02", [annotationDescriptionTextLink02]);
-    var cryptoniteImage = chrome.extension.getURL("images/metacert-logo-white.png");
+    var cryptoniteImage = chrome.extension.getURL("images/metacert-logo.png");
     var closeMessageParameters = {
       'operation': 'updateBannerClosed'
     };
@@ -222,7 +222,6 @@ Cryptonite.prototype = {
             '<div class="cryptonite-extension-updated-right">' +
               '<div class="cryptonite-extension-updated-title">' + annotationTitleText + '</div>' +
               '<div class="cryptonite-extension-updated-description">' + annotationDescriptionText01 + '</div>' +
-              '<div class="cryptonite-extension-updated-description">' + annotationDescriptionText02 + '</div>' +
             '</div>' +
             '<div class="cryptonite-extension-updated-close">&times;</div>' +
           '</div>' +
@@ -493,14 +492,7 @@ Cryptonite.prototype = {
    */
   annotateLink : function(aNodeId, aCheckResponse) {
     cryptonite.debug("----- ANNOTATING NODE -----", aNodeId);
-    var annotation;
-    var isAccountHeader = false;
-
-    if(0 < $(aNodeId).parents(".stream-item-header").length) {
-      isAccountHeader = true;
-    }
-
-    annotation = this.getAnnotationMarkup(aNodeId, isAccountHeader, aCheckResponse);
+    var annotation = this.getAnnotationMarkup(aNodeId, aCheckResponse);
 
     if (0 < $(aNodeId).find(".username").length) {
       $(aNodeId).find(".username").prepend(annotation);
@@ -521,23 +513,28 @@ Cryptonite.prototype = {
    *
    * @returns the annotation markup to annotate links.
    */
-  getAnnotationMarkup: function(aNodeId, aIsAccountHeader, aCheckResponse) {
+  getAnnotationMarkup: function(aNodeId, aCheckResponse) {
     var annotation;
     var title;
     var isVerifiedAccount;
     var flaggedResult = CryptoniteUtils.isFlaggedCategory(aCheckResponse.type.type);
     var shieldImage = this.blackShield;
+    var isAccountHeader = false;
+
+    if(0 < $(aNodeId).parents(".stream-item-header").length || $(aNodeId).hasClass("account-group")) {
+      isAccountHeader = true;
+    }
 
     if(flaggedResult.isCryptoGoodCategory) {
       isVerifiedAccount = "";
-      if(aIsAccountHeader) {
+      if(isAccountHeader) {
         shieldImage = this.greenShield;
       } else {
         shieldImage = this.greenShieldCircular;
       }
     } else {
       isVerifiedAccount = $.i18n.getString("website_annotation_account_not");
-      if(aIsAccountHeader) {
+      if(isAccountHeader) {
         shieldImage = this.blackShield;
       } else {
         shieldImage = this.blackShieldCircular;

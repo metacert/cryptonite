@@ -88,16 +88,62 @@ module.exports = function(grunt) {
         },
         exitCode: [0,1]
       }
+    },
+
+    strip_code: {
+      options: {
+        parityCheck: true,
+        intersectionCheck: true,
+        blocks: [
+          {
+            start_block: '/* start-cryptonite-private-code */',
+            end_block: '/* end-cryptonite-private-code */',
+          },
+          {
+            start_block: '<!-- start-cryptonite-private-code -->',
+            end_block: '<!-- end-cryptonite-private-code -->'
+          }
+        ]
+      },
+      your_target: {
+        // a list of files you want to strip code from
+        src: ['../cryptonite/src/js/**/*.js', '../cryptonite/src/html/**/*.*']
+      }
+    },
+
+    shell: {
+      copyInternalCryptonite: {
+        command: function() {
+          var commandToExecute;
+          commandToExecute = [
+            'rsync -av . ../cryptonite --exclude .git --exclude .DS_Store --exclude node_modules --exclude package-lock.json --exclude src.pem --exclude signing',
+            'rm -rfd ../cryptonite/node_modules'
+          ].join('&&');
+
+          return commandToExecute;
+        },
+        options: {
+          stdout: true,
+          stderr: true
+        }
+      },
     }
   });
 
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-strip-code');
 
   grunt.registerTask("cryptonite-jslint", "Execute a jslint scan over the whole codebase", function() {
     var outputToConsole = grunt.option('c') || '';
     grunt.task.run("exec:jslint:" + outputToConsole);
+  });
+
+  grunt.registerTask("update-repo", "", function() {
+    grunt.task.run("shell:copyInternalCryptonite");
+    grunt.task.run("strip_code");
   });
 
   grunt.registerTask('default', ['jsdoc', 'jslint', 'exec:jslint']);

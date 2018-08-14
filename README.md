@@ -30,7 +30,7 @@ There are several ways to scan the Javascript files in the project with jslint:
 ```sh
 $ grunt jslint
 ```
-This will result in a file called *grunt-jslint-results.log*.
+This will result in a file called *grunt-jslint-results.log* in the *output* folder.
 When calling this command, you are using the grunt package called `grunt-jslint`.
 All the configuration for this grunt call is inside the file *Gruntfile.js* in the `jslint` config section.
 
@@ -38,7 +38,7 @@ All the configuration for this grunt call is inside the file *Gruntfile.js* in t
 ```sh
 $ grunt cryptonite-jslint
 ```
-This will result in a file called *jslint-results.log*.
+This will result in a file called *jslint-results.log* in the *output* folder.
 
   If you execute:
 ```sh
@@ -50,16 +50,16 @@ the results will be displayed on the console instead of a log file.
 
 3. From the command-line, execute:
 ```sh
-$ jslint 'path/to/your/file' > results.log
+$ jslint 'path/to/your/file' > output/results.log
 ```
-This will result in a file called *results.log*.
+This will result in a file called *results.log* in the *output* folder.
 If you call `jslint` directly, you can scan a single file or a set of files. For example:
 ```sh
-$ jslint 'src/js/**/*.js' > results.log
+$ jslint 'src/js/**/*.js' > output/results.log
 ```
 will scan **all the files in the project**, and
 ```sh
-$ jslint 'src/js/background/background.js' > results.log
+$ jslint 'src/js/background/background.js' > output/results.log
 ```
 will scan the background.js file only.
 
@@ -75,13 +75,12 @@ To generate the `jsodc` documentation on the Cryptonite code, you need execute t
 ```sh
 $ grunt jsdoc
 ```
-a folder called *doc* will be created. This folder will contain all the generated documentation.
+a folder called *output/doc* will be created. This folder will contain all the generated documentation.
 
-# How to create / update the wiki information from the `jsodc` documentation on the Cryptonite code
+# How to create or update the wiki information from the `jsodc` documentation on the Cryptonite code
 
 From the command-line, execute:
 ```sh
-$ jsdoc2md 'src/js/**/*.js' > wiki.md
+$ jsdoc2md 'src/js/**/*.js' > output/wiki.md
 ```
-a file with all the wiki information will be generated. You need to copy-and-paste the contents of this file to the wiki page on the repository.
-
+a file with all the wiki information will be generated in the *output* folder. You need to copy-and-paste the contents of this file to the wiki page on the repository.

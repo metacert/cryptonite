@@ -272,12 +272,12 @@ div.cryptonite-website-extension-updated-content a {
 .cryptonite-annotation-extension-updated a:hover,
 .cryptonite-annotation-extension-updated a:visited {
   text-decoration: underline;
-  color: #ffffff;
+  color: #0000ee;
 }
 
 .cryptonite-extension-updated {
-  background-color: #00AA6B;
-  color: #ffffff;
+  background-color: #e8e8e8;
+  color: #4c4c4c;
 }
 
 .cryptonite-link-annotation {
@@ -290,24 +290,21 @@ div.cryptonite-website-extension-updated-content a {
 }
 
 .cryptonite-bells-image {
-  width: 4px;
-  height: 4px;
+  width: 8px;
+  height: 8px;
   display: inline;
   vertical-align: top;
-  padding: 2% 0px 0px 0px;
+  padding: 4px 0px 0px 0px;
 }
 
-.username .cryptonite-bells-image,
-.twitter-atreply .cryptonite-bells-image {
-}
-
-.js-profile-popup-actionable .cryptonite-bells-image {
+.avatar-row .cryptonite-bells-image {
   padding: 7px 0px 0px 0px;
 }
 
+.account-group .cryptonite-bells-image,
 .stream-item-header .cryptonite-bells-image {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   padding: 1px 0px 0px 0px;
 }
 /* extension updated annotation */
