@@ -54,9 +54,7 @@ chrome.runtime.onInstalled.addListener(function(aDetails) {
   if(aDetails.reason == "install" || aDetails.reason == "update") {
     CryptoniteUtils.removeFromAccessAnyway();
     if(aDetails.reason == "update") {
-      //XXX: specifically for this version 1.4.10, we do not want to display the update banner.
-      //for the next versions we should change the value of PropertyDAO.PROP_DISPLAY_UPDATE_BANNER to true
-      PropertyDAO.set(PropertyDAO.PROP_DISPLAY_UPDATE_BANNER, false);
+      PropertyDAO.set(PropertyDAO.PROP_DISPLAY_UPDATE_BANNER, true);
       PropertyDAO.set(PropertyDAO.PROP_UPDATE_BANNER_TAB_ID, -1);
     }
     if(aDetails.reason == "install") {

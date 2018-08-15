@@ -1,0 +1,44 @@
+{
+    "bitwise"       : true,     // Prohibit bitwise operators (&, |, ^, etc.).
+    "curly"         : true,     // Require {} for every new block or scope.
+    "eqeqeq"        : true,     // Require triple equals i.e. `===`.
+    "forin"         : true,     // Tolerate `for in` loops without `hasOwnPrototype`.
+    "freeze"        : true,     // Prohibits overwriting prototypes of native objects such as Array, Date and so on.
+    "immed"         : true,     // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+    "latedef"       : true,     // Prohibit variable use before definition.
+    "maxerr"        : 500,      // Maximum amount of warnings JSHint will produce before giving up.
+    "nocomma"       : true,     // This option prohibits the use of the comma operator.
+    "noarg"         : true,     // Prohibit use of `arguments.caller` and `arguments.callee`.
+    "nonbsp"        : true,     // This option warns about "non-breaking whitespace" characters.
+    "nonew"         : true,     // Prohibit use of constructors for side-effects.
+    "notypeof"      : false,    // This option suppresses warnings about invalid typeof operator values.
+    "plusplus"      : false,    // Prohibit use of `++` & `--`.
+    "regexp"        : false,    // Prohibit `.` and `[^...]` in regular expressions.
+    "strict"        : false,    // Require `use strict` pragma in every file.
+    "undef"         : true,     // Require all non-global variables be declared before they are used.
+    "unused"        : true,     // This option warns when you define and never use your variables.
+    "varstmt"       : false,    // When set to true, the use of VariableStatements are forbidden.
+
+    //environments
+    "browser"       : true,
+    "jquery"        : true,
+
+    //globals
+    "globals": {
+      "module": true,
+      "require": true,
+      "self": true,
+      "safari": true,
+      "opr": true,
+      "browser": true,
+      "chrome": true,
+      "MetaCertApi": true,
+      "Background": true,
+      "ConfigSettings": true,
+      "Cryptonite": true,
+      "Options": true,
+      "Popup": true,
+      "CryptoniteUtils": true,
+      "PropertyDAO": true
+    }
+}

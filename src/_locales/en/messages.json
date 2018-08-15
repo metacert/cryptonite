@@ -31,7 +31,7 @@
   "website_annotation_close" : {"message": "Don't show me this again"},
 
   "website_annotation_extension_updated_title" : {"message": "Important Announcement: Cryptonite is updated to %S"},
-  "website_annotation_extension_updated_description_01" : {"message": "This update includes performance improvements for Twitter annotations."},
+  "website_annotation_extension_updated_description_01" : {"message": "This release includes significant design improvements to Twitter annotations."},
   "website_annotation_extension_updated_description_02" : {"message":"Join our %S1 to find out how you, as a Cryptonite user, can get VIP access to the MetaCert Protocol Beta program in return for a Token bonus."},
   "website_annotation_extension_updated_description_link_01" : {"message": "MetaCert Protocol"},
   "website_annotation_extension_updated_description_link_02" : {"message": "Telegram group"},
@@ -70,6 +70,7 @@
   "options_beta_program_hint_04" : {"message": "To get started. Submit your email below that you want to use to buy tokens and you’ll then receive an email with a unique link from the token sales platform."},
   "options_beta_program_hint_05" : {"message": "Remember, the shield should always be green when you visit the token sale platform."},
   "options_beta_program_hint_01_link" : {"message": " here"},
+  "options_beta_program_placeholder_email" : {"message": "email"},
   "options_beta_program_submit" : {"message": "Submit"},
   "options_beta_program_sending" : {"message": "Sending... "},
   "options_beta_program_success" : {"message": "Email successfully submitted. Please check your email."},
