@@ -30,11 +30,11 @@ var Options = {
     var optionsMetaTokensDescriptionText03 = $.i18n.getString("options_metatokens_hint_03", [optionsMetaTokensLink01, optionsMetaTokensLink02]);
     $("#cryptonite-options-metatokens-text-03").html(optionsMetaTokensDescriptionText03);
 
-    var optionsBetaProgramLink01 = '<a href="https://metacertprotocol.com/beta" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("options_beta_program_hint_01_link") + '</a>';
+    var optionsBetaProgramLink01 = '<a href="https://metacertprotocol.com/cryptonite-beta?via=cryptonite" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("options_beta_program_hint_01_link") + '</a>';
     var optionsBetaProgramDescriptionText01 = $.i18n.getString("options_beta_program_hint_01", [optionsBetaProgramLink01]);
     $("#cryptonite-options-beta-program-text-01").html(optionsBetaProgramDescriptionText01);
 
-    var optionsBetaProgramLink03_02 = '<a href="https://metacertprotocol.com/beta" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("options_beta_program_hint_03_02_link") + '</a>';
+    var optionsBetaProgramLink03_02 = '<a href="https://metacertprotocol.com/cryptonite-beta?via=cryptonite" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("options_beta_program_hint_03_02_link") + '</a>';
     var optionsBetaProgramDescriptionText03_02 = $.i18n.getString("options_beta_program_hint_03_02", [optionsBetaProgramLink03_02]);
     $("#cryptonite-options-beta-program-text-03_02").html(optionsBetaProgramDescriptionText03_02);
 
@@ -147,37 +147,6 @@ var Options = {
     }
   },
 
-  /**
-   * Sends the data to subscribe to the Metacert Beta Program.
-   */
-  submitSubscriptionData: function() {
-    var email = $('#cryptonite-beta-program-email').val();
-    var data = { 'email': email };
-    var url = ConfigSettings.METACERT_BETA_PROGRAM_SUBSCRIPTION_CONFIRMATION_PAGE;
-    var callback = function(aIsSubscriptionSuccessful) {
-      $('#cryptonite-beta-program-email').val("");
-      $("#cryptonite-beta-program-submit-button").removeAttr("disabled");
-      $("#cryptonite-beta-program-submit-button .cryptonite-beta-program-loading-image").hide();
-      $("#cryptonite-beta-program-submit-button #cryptonite-beta-program-submit-button-text").text(
-        $.i18n.getString("options_beta_program_submit"));
-
-      if(aIsSubscriptionSuccessful) {
-        $('.cryptonite-beta-program-form-results-error').hide();
-        $('.cryptonite-beta-program-form-results-success').show();
-        chrome.tabs.create({ url: url, active: true }, function(aTab) {
-        });
-      } else {
-        $('.cryptonite-beta-program-form-results-success').hide();
-        $('.cryptonite-beta-program-form-results-error').show();
-      }
-    };
-
-    $("#cryptonite-beta-program-submit-button").attr("disabled", "disabled");
-    $("#cryptonite-beta-program-submit-button .cryptonite-beta-program-loading-image").show();
-    $("#cryptonite-beta-program-submit-button #cryptonite-beta-program-submit-button-text").text(
-      $.i18n.getString("options_beta_program_sending"));
-    CryptoniteUtils.submitSubscriptionData(data, callback);
-  },
 
   /**
    * Unitializes the object.

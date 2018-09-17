@@ -34,6 +34,14 @@ Cryptonite.prototype = {
   hostName: CryptoniteUtils.getDomain(window.location.hostname),
   firstLoad: true,
   siteId: '',
+  siteAnnotationCache: {
+    url: null,
+    twitterUsernameUrl: null,
+    type: null,
+    isBannerAnnotationEnabled: false,
+    areWebsiteAnnotationsEnabled: false,
+    areTwitterMentionsAnnotationsEnabled: false
+  },
 
   /**
    * @description Logs debug messages, if the debug flag is set.
@@ -77,7 +85,6 @@ Cryptonite.prototype = {
       this.debug('this.siteId: ', this.siteId);
     }
   },
-
 
   /**
    * @description Displays a banner over the first page opened after an extension update.
@@ -131,6 +138,8 @@ Cryptonite.prototype = {
    * @param {Object} aData the data coming from the MetaCert API that we will use to annotate the webapge.
    */
   flagSite: function(aData) {
+    cryptonite.setWebsiteCacheData(aData);
+
     if(null === aData.type || false === CryptoniteUtils.shouldDisplayWebsiteBanner(aData.type)) {
       $('.cryptonite-website-annotation').remove();
       $('.cryptonite-website-annotation-shift').removeClass('cryptonite-website-annotation-shift');
@@ -157,10 +166,29 @@ Cryptonite.prototype = {
    *
    * @method removeFlag
    * @memberof Cryptonite#
+   * @param {Object} aData the data coming from the MetaCert API that we will use to annotate the webapge.
    */
-  removeFlag: function() {
+  removeFlag: function(aData) {
+    cryptonite.setWebsiteCacheData(aData);
+
     $('.cryptonite-website-annotation-shift').removeClass('cryptonite-website-annotation-shift');
     $('.cryptonite-website-annotation').remove();
+  },
+
+  /**
+   * @description Sets the cache data for the website type, website url, twitter username url and
+   * the flags to display annotations or not.
+   *
+   * @method setWebsiteCacheData
+   * @memberOf Cryptonite#
+   * @param {Object} aData the data coming from the MetaCert API that we will use to annotate the webapge.
+   */
+  setWebsiteCacheData: function(aData) {
+    this.siteAnnotationCache.twitterUsernameUrl = CryptoniteUtils.extractTwitterUsernameUrl(window.location.href);
+    this.siteAnnotationCache.type = aData.type;
+    this.siteAnnotationCache.isBannerAnnotationEnabled = aData.isBannerAnnotationEnabled;
+    this.siteAnnotationCache.areWebsiteAnnotationsEnabled = aData.areWebsiteAnnotationsEnabled;
+    this.siteAnnotationCache.areTwitterMentionsAnnotationsEnabled = aData.areTwitterMentionsAnnotationsEnabled;
   },
 
   /**
@@ -222,6 +250,7 @@ Cryptonite.prototype = {
             '<div class="cryptonite-extension-updated-right">' +
               '<div class="cryptonite-extension-updated-title">' + annotationTitleText + '</div>' +
               '<div class="cryptonite-extension-updated-description">' + annotationDescriptionText01 + '</div>' +
+              '<div class="cryptonite-extension-updated-description">' + annotationDescriptionText02 + '</div>' +
             '</div>' +
             '<div class="cryptonite-extension-updated-close">&times;</div>' +
           '</div>' +
@@ -373,11 +402,12 @@ Cryptonite.prototype = {
     var searchExpr = CryptoniteUtils.CHECK_INTERNALLY_DOMAINS_MAP[this.siteId];
     var nodeId;
     var url;
+    var message;
+    var nodeToFlagId;
 
     $(searchExpr).each(function () {
         //avoid processing the link more than once
-        if ($(this).attr('data-is-cryptonite-processed') === 'true' ||
-            $(this).attr('data-is-cryptonite-flagged') === 'true') {
+        if ($(this).attr('data-is-cryptonite-processed') === 'true') {
             return;
         }
 
@@ -386,8 +416,30 @@ Cryptonite.prototype = {
 
         $(this).attr("nodecheckid", nodeId);
         $(this).attr('data-is-cryptonite-processed', true);
+        $(this).attr('data-is-cryptonite-annotated', false);
 
-        if ("undefined" !== typeof(url) && null !== url &&  '' !== $.trim(url)) {
+        //process only valid urls
+        if ("undefined" !== typeof(url) && null !== url && '' !== $.trim(url)) {
+          url = url.toLowerCase();
+
+          //avoid calling the API when the user is on the same page as the twitter username to be queried
+          if(null !== cryptonite.siteAnnotationCache.twitterUsernameUrl &&
+             -1 < url.indexOf(cryptonite.siteAnnotationCache.twitterUsernameUrl)) {
+            message = {
+              url: cryptonite.siteAnnotationCache.twitterUsernameUrl,
+              type: cryptonite.siteAnnotationCache.type,
+              placeFound: "folders",
+              isBannerAnnotationEnabled: cryptonite.siteAnnotationCache.isBannerAnnotationEnabled,
+              areWebsiteAnnotationsEnabled: cryptonite.siteAnnotationCache.areWebsiteAnnotationsEnabled,
+              areTwitterMentionsAnnotationsEnabled: cryptonite.siteAnnotationCache.areTwitterMentionsAnnotationsEnabled
+            };
+
+            nodeToFlagId = "[nodecheckid=" + nodeId + "]";
+            $(nodeToFlagId).attr('data-is-cryptonite-annotated', true);
+            $(nodeToFlagId).attr('data-cryptonite-type', message.type);
+            cryptonite.annotateLink($(nodeToFlagId), message);
+
+          } else {
             //check with the MetaCert API about the url and its type: malware, phising, xxx, etc
             cryptonite.debug('Current link to process: ', url);
             messageParameters.url = url;
@@ -395,6 +447,7 @@ Cryptonite.prototype = {
             chrome.runtime.sendMessage(null, messageParameters, null, function (aState) {
                 // nothing to do here as the message is processed asynchronously
             });
+          }
         }
     });
   },
@@ -517,7 +570,7 @@ Cryptonite.prototype = {
     var annotation;
     var title;
     var isVerifiedAccount;
-    var flaggedResult = CryptoniteUtils.isFlaggedCategory(aCheckResponse.type.type);
+    var flaggedResult = CryptoniteUtils.isFlaggedCategory(aCheckResponse.type);
     var shieldImage = this.blackShield;
     var isAccountHeader = false;
 
@@ -603,24 +656,20 @@ if (window.top === window) {
         break;
 
       case 'removeFlag':
-        cryptonite.removeFlag();
+        cryptonite.removeFlag(aMessage);
         break;
 
       case 'checkURL':
         cryptonite.debug("----- GOT THIS BACK FROM THE METACERT API -----", aMessage);
 
-        var urlType = aMessage.type;
-        if (null != urlType) {
-          var nodeToFlagId = "[nodecheckid=" + aMessage.nodeId + "]";
-          $(nodeToFlagId).attr('data-is-cryptonite-flagged', true);
-          $(nodeToFlagId).attr('data-cryptonite-type', urlType.type);
+        var nodeToFlagId = "[nodecheckid=" + aMessage.nodeId + "]";
+        $(nodeToFlagId).attr('data-is-cryptonite-annotated', true);
+        $(nodeToFlagId).attr('data-cryptonite-type', aMessage.type);
 
-          cryptonite.annotateLink($(nodeToFlagId), aMessage);
+        cryptonite.annotateLink($(nodeToFlagId), aMessage);
 
-          cryptonite.debug("url: ", aMessage.url);
-          cryptonite.debug("type: ", aMessage.type);
-        }
-
+        cryptonite.debug("url: ", aMessage.url);
+        cryptonite.debug("type: ", aMessage.type);
         cryptonite.debug("----- END -----");
         cryptonite.debug("");
         break;

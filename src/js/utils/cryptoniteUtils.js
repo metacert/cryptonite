@@ -216,10 +216,7 @@ var CryptoniteUtils = {
    * we enter into a load / redirect loop with non predictable results.
    */
   setCryptoWebsiteResult: function(aResponse, aTab, aIsPageLoad, aIsPageLoading) {
-    var urlInfo = CryptoniteUtils.getURLType(aResponse);
-    var type = urlInfo.type;
-    var placeFound = urlInfo.placeFound;
-    var flaggedResult = CryptoniteUtils.isFlaggedCategory(type);
+    var flaggedResult = CryptoniteUtils.isFlaggedCategory(aResponse.type);
     var details = {
       'path': null,
       'tabId': null
@@ -241,7 +238,7 @@ var CryptoniteUtils = {
         if (flaggedResult.isCryptoGoodCategory) {
           details.path = CryptoniteUtils.cryptoGoodCategoryIcon;
           tooltipDetails.title = $.i18n.getString("button_openPopup_green",
-            [ $.i18n.getString("button_openPopup_verify_" + placeFound) ]);
+            [ $.i18n.getString("button_openPopup_verify_" + aResponse.placeFound) ]);
 
           //addd the cryptocurrency url to a history list of visited cryptocurrency urls
           if(aIsPageLoad) {
@@ -291,23 +288,25 @@ var CryptoniteUtils = {
 
     var checkCallback = function(aResponse) {
       if (aResponse) {
-        var urlInfo = CryptoniteUtils.getURLType(aResponse);
-        var type = urlInfo.type;
+        var urlType = CryptoniteUtils.getURLType(aResponse);
+        var type = urlType.type;
+        var placeFound = urlType.placeFound;
         var shouldDisplayWebsiteBanner = CryptoniteUtils.shouldDisplayWebsiteBanner(type);
 
         responseObj = {};
+        responseObj.url = aTab.url;
+        responseObj.type = type;
+        responseObj.placeFound = placeFound;
+        responseObj.isBannerAnnotationEnabled =
+          PropertyDAO.get(PropertyDAO.PROP_ENABLE_BANNER_ANNOTATION);
+        responseObj.areWebsiteAnnotationsEnabled =
+          PropertyDAO.get(PropertyDAO.PROP_ENABLE_WEBSITE_ANNOTATIONS);
+        responseObj.areTwitterMentionsAnnotationsEnabled =
+          PropertyDAO.get(PropertyDAO.PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS);
+
         if (shouldDisplayWebsiteBanner) {
-          responseObj.url = aTab.url;
           responseObj.operation = 'flagSite';
           responseObj.forceFlagRemove = true;
-          responseObj.type = type;
-          responseObj.isBannerAnnotationEnabled =
-            PropertyDAO.get(PropertyDAO.PROP_ENABLE_BANNER_ANNOTATION);
-          responseObj.areWebsiteAnnotationsEnabled =
-            PropertyDAO.get(PropertyDAO.PROP_ENABLE_WEBSITE_ANNOTATIONS);
-          responseObj.areTwitterMentionsAnnotationsEnabled =
-            PropertyDAO.get(PropertyDAO.PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS);
-
           responseObj.closedBanners = Background.closedBanners;
         } else {
           responseObj.operation = 'removeFlag';
@@ -316,7 +315,7 @@ var CryptoniteUtils = {
           chrome.tabs.sendMessage(aTab.id, responseObj);
         }
 
-        CryptoniteUtils.setCryptoWebsiteResult(aResponse, aTab, aIsPageLoad, aIsPageLoading);
+        CryptoniteUtils.setCryptoWebsiteResult(responseObj, aTab, aIsPageLoad, aIsPageLoading);
 
         if(aIsPageLoad && !aIsPageLoading) {
           responseObj.operation = 'annotatePage';
@@ -342,12 +341,13 @@ var CryptoniteUtils = {
         accessAnyway = CryptoniteUtils.checkAccessAnywayUrl(aTab);
         if(!accessAnyway && aTab.url) {
           url = aTab.url.toLowerCase();
-          MetaCertApi.checkUrl(url, ConfigSettings.METACERT_ADDRESS_BAR_URL, checkCallback);
+          MetaCertApi.checkUrl(url, null, ConfigSettings.METACERT_ADDRESS_BAR_URL, checkCallback);
         }
       }
     } else {
-      //let's skip the API call if the protocol is not http or https, or if the port is not 80 or 8080
-      return;
+      if(CryptoniteUtils.isPreferencesUrl(aTab.url)) {
+        CryptoniteUtils.forceGreenIconDisplay(aTab);
+      }
     }
   },
 
@@ -491,6 +491,52 @@ var CryptoniteUtils = {
   },
 
   /**
+   * Extracts the twitter username from an url.
+   *
+   * @param {String} aUrl to url to extract the twitter username from.
+   * @returns {String} the twitter username, like https://twitter.com/metacert.
+   */
+  extractTwitterUsernameUrl: function(aUrl) {
+    var urlParts = [];
+    var usernameParts = [];
+    var username = "";
+    var result = "";
+
+    //let's use lowercase only
+    aUrl = aUrl.toLowerCase();
+    if (aUrl.indexOf("twitter.com") > -1) {
+      if(aUrl.endsWith("/")) {
+        //remove the last "/"
+        aUrl = aUrl.substring(0, aUrl.length - 1);
+      }
+      urlParts = aUrl.split('twitter.com');
+
+      if("undefined" !== typeof(urlParts[1])) {
+        //extract the twitter username from the url
+        usernameParts = urlParts[1].split("/");
+
+        if("undefined" !== typeof(usernameParts[1])) {
+          username = usernameParts[1];
+          if("i" !== username && "#" !== username && !username.startsWith("search?")) {
+            result = urlParts[0] + "twitter.com" + "/" +  username;
+          } else {
+            result = null;
+          }
+        } else {
+          result = null;
+        }
+      } else {
+        result = null;
+      }
+    }
+    else {
+      result = null;
+    }
+
+    return result;
+  },
+
+  /**
    * Forces adding a banner to the active tab after the extension has been updated.
    *
    * @param {Tab} aTab the tab object that contains the information of the tab where we will place the update banner.
@@ -608,6 +654,25 @@ var CryptoniteUtils = {
   },
 
   /**
+   * Forces the green icon to be displayed next to the address bar.
+   * This method is used when we need to force the green icon appear on the addon Preferences page.
+   *
+   * @param {Tab} aTab the tab object that is being examinated.
+   */
+  forceGreenIconDisplay: function(aTab) {
+    var details = {};
+    var tooltipDetails = {};
+    var placeFound = "domains";
+
+    details.tabId = aTab.id;
+    details.path = CryptoniteUtils.cryptoGoodCategoryIcon;
+    tooltipDetails.title = $.i18n.getString("button_openPopup_green",
+        [ $.i18n.getString("button_openPopup_verify_" + placeFound) ]);
+    chrome.browserAction.setIcon(details, null);
+    chrome.browserAction.setTitle(tooltipDetails);
+  },
+
+  /**
    * Determines if the protocol in the url is valid.
    * We will only process urls with http and htpps protocols.
    *
@@ -685,6 +750,31 @@ var CryptoniteUtils = {
     }
 
     return isLocalTab;
+  },
+
+  /**
+   * Determines if the url is from the Preferences tab on the extension.
+   *
+   * @param {String} aUrl the url to test.
+   * @returns {Boolean} true if the url is from the Preferences tab, false otherwise.
+   */
+  isPreferencesUrl: function(aUrl) {
+    var isPreferencesUrl = false;
+    var isLocalTab = false;
+    var preferencesUrl = CryptoniteUtils.getExtensionOptionsURL();
+
+    if(aUrl && 0 < aUrl.length) {
+      if(0 < aUrl.indexOf("#")) {
+        aUrl = aUrl.substring(0, aUrl.indexOf("#"));
+      }
+
+      isLocalTab = CryptoniteUtils.localTabRegExp.test(aUrl);
+      if(isLocalTab && 0 <= aUrl.indexOf(preferencesUrl)) {
+        isPreferencesUrl = true;
+      }
+    }
+
+    return isPreferencesUrl;
   },
 
   /**
@@ -778,6 +868,16 @@ var CryptoniteUtils = {
 
     chrome.tabs.create({ url: firstRunURL, active: true }, function(aTab) {
       PropertyDAO.set(PropertyDAO.PROP_FIRST_RUN_PAGE_DISPLAYED, true);
+    });
+  },
+
+  /**
+   * Opens a page in a new tab after the user updates the extension.
+   */
+  openExtensionUpdatePage : function() {
+    var extensionUpdateURL = ConfigSettings.METACERT_UPDATE_BETA_PAGE;
+
+    chrome.tabs.create({ url: extensionUpdateURL, active: true }, function(aTab) {
     });
   },
 

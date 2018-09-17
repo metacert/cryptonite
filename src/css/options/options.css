@@ -42,6 +42,11 @@ body, html {
   height: 100%;
 }
 
+#cryptonite-layout {
+  display: flex;
+  height: 100%;
+}
+
 .cryptonite-prefs-page-content {
   float: left;
   margin-left: 60px;
@@ -55,6 +60,10 @@ body, html {
 #cryptonite-chatbot-wrapper .cryptonite-left-group,
 #cryptonite-beta-program-wrapper .cryptonite-left-group {
   margin-right: 25px;
+}
+
+.cryptonite-beta-program {
+  margin-left: 0px;
 }
 
 .cryptonite-selected {
@@ -215,6 +224,10 @@ li a, li a:visited {
   color: #199eaf !important;
 }
 
+#cryptonite-menu #cryptonite-beta-program.cryptonite-selected {
+  background-color: #000000;
+}
+
 #cryptonite-menu li a, #cryptonite-menu li a:visited {
   text-decoration: none;
   color: inherit;
@@ -222,6 +235,33 @@ li a, li a:visited {
 /* new and responsive settings page */
 
 /* email submit form styles */
+#cryptonite-beta-program-wrapper,
+.cryptonite-beta-program-content {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+.cryptonite-beta-program-image {
+  padding: 30px 0px 0px 0px;
+  height: 35px;
+}
+
+.cryptonite-beta-program-content {
+  padding: 20px 60px 60px 60px;
+}
+
+.cryptonite-beta-program-section-title {
+  padding: 80px 0px 0px 0px;
+  letter-spacing: 0px;
+  color: #00cccc;
+}
+
+.cryptonite-beta-program-content .cryptonite-hint,
+.cryptonite-beta-program-content .cryptonite-hint a {
+  color: #ffffff;
+}
+
 .cryptonite-beta-program-form ul {
   margin: 0px;
   padding: 0px;
@@ -262,7 +302,8 @@ li a, li a:visited {
 
 .cryptonite-beta-program-form #cryptonite-beta-program-email {
   min-width: 200px;
-  max-width: 300px;
+  width: 400px;
+  max-width: 500px;
 }
 
 .cryptonite-beta-program-form ul li input.align-left {
@@ -281,13 +322,13 @@ li a, li a:visited {
 .cryptonite-beta-program-form ul li input[type="button"],
 .cryptonite-beta-program-form ul li input[type="submit"],
 .cryptonite-beta-program-form ul li button {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
   color: #ffffff;
   font-size: 12px;
   padding: 8px 0px;
-  background-color: #199eaf;
+  background-color: #00cccc;
   border: solid #aaaaaa 1px;
   text-decoration: none;
   display: inline;
@@ -299,14 +340,18 @@ li a, li a:visited {
 .cryptonite-beta-program-form ul li input[type="button"]:hover,
 .cryptonite-beta-program-form ul li input[type="submit"]:hover,
 .cryptonite-beta-program-form ul li button:hover {
-  background: #116f7a;
+  background: #009999;
   text-decoration: none;
 }
 
 .cryptonite-beta-program-form-results-success,
 .cryptonite-beta-program-form-results-error {
-  display: none;
+  visibility: hidden;
   font-style: italic;
+}
+
+.cryptonite-beta-program-form-results-error {
+  display: none;
 }
 
 .cryptonite-beta-program-loading-image {
@@ -316,9 +361,3 @@ li a, li a:visited {
     margin: 0px 0px 0px 10px;
 }
 /* email submit form styles */
-
-
-/* let us hide all the Beta Program UI */
-.cryptonite-beta-program {
-  display: none !important;
-}

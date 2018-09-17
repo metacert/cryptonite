@@ -308,8 +308,3 @@ div.cryptonite-website-extension-updated-content a {
   padding: 1px 0px 0px 0px;
 }
 /* extension updated annotation */
-
-/* let us hide all the Beta Program UI */
-.cryptonite-beta-program {
-  display: none !important;
-}

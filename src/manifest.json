@@ -3,7 +3,7 @@
   "name": "__MSG_extension_name__",
   "description": "__MSG_extension_description__",
   "short_name": "metacert-cryptonite",
-  "version": "1.4.21",
+  "version": "1.4.30",
   "applications": {
     "gecko": {
       "id": "{721a41c0-5e10-45a9-8347-ede4ec3183e8}"

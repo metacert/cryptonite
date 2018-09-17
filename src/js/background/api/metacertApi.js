@@ -12,9 +12,10 @@ var MetaCertApi = {
    * @param {String} aType the type of url to process: addressBar or websiteInternalUrl.
    * @param {Function} aCallback the callback to be called on return.
    */
-  checkUrl : function(aUrl, aType, aCallback) {
+  checkUrl : function(aUrl, aNodeId, aType, aCallback) {
     var body = {};
     body.url = aUrl;
+    body.nodeId = aNodeId;
 
     this._sendRequest(aType, "POST", body, aCallback);
   },

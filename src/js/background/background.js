@@ -54,7 +54,8 @@ chrome.runtime.onInstalled.addListener(function(aDetails) {
   if(aDetails.reason == "install" || aDetails.reason == "update") {
     CryptoniteUtils.removeFromAccessAnyway();
     if(aDetails.reason == "update") {
-      PropertyDAO.set(PropertyDAO.PROP_DISPLAY_UPDATE_BANNER, true);
+      //XXX: do not display the update banner for the latest version
+      PropertyDAO.set(PropertyDAO.PROP_DISPLAY_UPDATE_BANNER, false);
       PropertyDAO.set(PropertyDAO.PROP_UPDATE_BANNER_TAB_ID, -1);
     }
     if(aDetails.reason == "install") {
@@ -148,7 +149,8 @@ chrome.runtime.onMessage.addListener(function(aRequest, aSender, aSendResponse) 
         responseObj.nodeId = aRequest.nodeId;
         responseObj.url = aRequest.url;
         responseObj.operation = 'checkURL';
-        responseObj.type = urlType;
+        responseObj.type = urlType.type;
+        responseObj.placeFound = urlType.placeFound;
         responseObj.isBannerAnnotationEnabled =
           PropertyDAO.get(PropertyDAO.PROP_ENABLE_BANNER_ANNOTATION);
         responseObj.areWebsiteAnnotationsEnabled =
@@ -159,7 +161,7 @@ chrome.runtime.onMessage.addListener(function(aRequest, aSender, aSendResponse) 
         chrome.tabs.sendMessage(aSender.tab.id, responseObj);
       };
 
-      MetaCertApi.checkUrl(aRequest.url, ConfigSettings.METACERT_WEBSITE_INTERNAL_URL, checkURLCallback);
+      MetaCertApi.checkUrl(aRequest.url, aRequest.nodeId, ConfigSettings.METACERT_WEBSITE_INTERNAL_URL, checkURLCallback);
       break;
   }
   return true;

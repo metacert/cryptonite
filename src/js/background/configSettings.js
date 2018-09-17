@@ -132,7 +132,6 @@ var ConfigSettings = {
     this._browser_name = value;
   },
 
-  METACERT_API_ENDPOINT : "",
   METACERT_API_ENDPOINT_ADDRESS_BAR_URL_ENDPOINT : "",
   METACERT_API_ENDPOINT_WEBSITE_INTERNAL_URL_ENDPOINT : "",
   METACERT_API_KEY : "",
@@ -147,6 +146,7 @@ var ConfigSettings = {
   METACERT_RATE_US_OPERA: "https://addons.opera.com/extensions/details/cryptonite-by-metacert/?#feedback-container",
   //TODO: for the Beta Program, the url should be: "https://metacertprotocol.com/beta?via=cryptonite"
   METACERT_FIRST_RUN_PAGE: "https://metacertprotocol.com/cryptonite?via=cryptonite",
+  METACERT_UPDATE_BETA_PAGE: "https://metacertprotocol.com/cryptonite-beta?via=cryptonite",
   METACERT_MAX_HISTORY_ITEMS: 10,
   METACERT_MAX_HISTORY_ITEMS_IN_ARRAY: 20,
 
