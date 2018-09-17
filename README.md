@@ -84,3 +84,19 @@ From the command-line, execute:
 $ jsdoc2md 'src/js/**/*.js' > output/wiki.md
 ```
 a file with all the wiki information will be generated in the *output* folder. You need to copy-and-paste the contents of this file to the wiki page on the repository.
+
+# How to syncronise the `internal-cryptonite` and the `cryptonite` repositories
+
+1. Make sure you have a working folder with two repositories: `internal-cryptonite`: https://github.com/metacert/internal-cryptonite and `cryptonite`: https://github.com/metacert/cryptonite
+2. Make sure both folders `internal-cryptonite` and `cryptonite` are at the same level
+3. Go to the `cryptonite` folder on your local machine and set `develop` as your current working branch
+4. Pull the latest changes from the `develop` branch into the `cryptonite` folder
+5. Go to the `internal-cryptonite` folder on your local machine and set `develop` as your current working branch
+6. Pull the latest changes from the `develop` branch into the `internal-cryptonite` folder
+7. From the command-line, execute:
+```sh
+$ grunt update-repo
+```
+This command will copy all the files from the `internal-cryptonite` folder to the `cryptonite` folder. This command will also remove all the sensitive information from the `cryptonite` folder, like the keys to call the MetaCert API
+8. On the `cryptonite` repository, commit all the changes inside the `cryptonite` folder. Make sure you are committing the changes into the `develop` branch
+9. On the `cryptonite` repository, merge your changes from the `develop` branch into the master `branch`
