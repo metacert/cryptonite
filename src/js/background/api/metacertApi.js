@@ -32,7 +32,6 @@ var MetaCertApi = {
       url: ConfigSettings.METACERT_BETA_PROGRAM_SUBSCRIPTION_URL_ENDPOINT,
       beforeSend: function (request) {
         request.setRequestHeader("Security-Token", ConfigSettings.METACERT_BETA_PROGRAM_SUBSCRIPTION_SECURITY_TOKEN);
-        request.setRequestHeader("Cache-Control", ConfigSettings.METACERT_BETA_PROGRAM_SUBSCRIPTION_CACHE_CONTROL);
         request.setRequestHeader("Content-Type", "application/json");
       },
       data: JSON.stringify(aData),
@@ -80,8 +79,7 @@ var MetaCertApi = {
         dataType: "json",
         beforeSend: function (request) {
           request.setRequestHeader("apiKey", ConfigSettings.METACERT_API_KEY);
-          request.setRequestHeader("Security-Token", ConfigSettings.METACERT_API_KEY);
-          request.setRequestHeader("Cache-Control", ConfigSettings.METACERT_CACHE_CONTROL);
+          request.setRequestHeader("Security-Token", ConfigSettings.METACERT_SECURITY_TOKEN);
           request.setRequestHeader("x-cryptonite-version", ConfigSettings.EXTENSION_VERSION);
           request.setRequestHeader("x-cryptonite-browser", ConfigSettings.BROWSER_NAME);
         },
