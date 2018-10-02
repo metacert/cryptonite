@@ -136,7 +136,6 @@ var ConfigSettings = {
   METACERT_API_ENDPOINT_WEBSITE_INTERNAL_URL_ENDPOINT : "",
   METACERT_API_KEY : "",
   METACERT_SECURITY_TOKEN : "",
-  METACERT_CACHE_CONTROL : "max-age=86400",
   METACERT_ADDRESS_BAR_URL : "addressBarUrl",
   METACERT_WEBSITE_INTERNAL_URL : "websiteInternalUrl",
 
@@ -144,15 +143,13 @@ var ConfigSettings = {
   METACERT_RATE_US_CHROME: "https://chrome.google.com/webstore/detail/cryptonite-by-metacert/keghdcpemohlojlglbiegihkljkgnige/reviews/?utm_source=CryptoniteByMetaCert",
   METACERT_RATE_US_FIREFOX: "https://addons.mozilla.org/en-US/firefox/addon/cryptonite-by-metacert/reviews/?utm_source=CryptoniteByMetaCert",
   METACERT_RATE_US_OPERA: "https://addons.opera.com/extensions/details/cryptonite-by-metacert/?#feedback-container",
-  //TODO: for the Beta Program, the url should be: "https://metacertprotocol.com/beta?via=cryptonite"
-  METACERT_FIRST_RUN_PAGE: "https://metacertprotocol.com/cryptonite?via=cryptonite",
+  METACERT_FIRST_RUN_PAGE: "https://metacertprotocol.com/cryptonite-beta?via=cryptonite",
   METACERT_UPDATE_BETA_PAGE: "https://metacertprotocol.com/cryptonite-beta?via=cryptonite",
   METACERT_MAX_HISTORY_ITEMS: 10,
   METACERT_MAX_HISTORY_ITEMS_IN_ARRAY: 20,
 
   METACERT_BETA_PROGRAM_SUBSCRIPTION_URL_ENDPOINT: "",
   METACERT_BETA_PROGRAM_SUBSCRIPTION_SECURITY_TOKEN: "",
-  METACERT_BETA_PROGRAM_SUBSCRIPTION_CACHE_CONTROL: "no-cache",
   METACERT_BETA_PROGRAM_SUBSCRIPTION_CONFIRMATION_PAGE: "",
 
   GOOD_CRYPTO_DOMAINS_ARRAY: [
