@@ -15,6 +15,10 @@ var PropertyDAO = {
   PROP_UPDATE_BANNER_TAB_ID  :                   'metacert.cryptonite.general.update.banner.tab.id',
   PROP_INSTALL_BANNER_TAB_ID  :                  'metacert.cryptonite.general.install.banner.tab.id',
   PROP_IS_ACCESS_ANYWAY_FIX_APPLIED :            'metacert.cryptonite.general.is.access.anyway.fix.applied',
+  PROP_IS_EXTENSION_PAID :                       'metacert.cryptonite.general.is.extension.paid',
+  PROP_IS_TRIAL_ACTIVE :                         'metacert.cryptonite.general.is.trial.active',
+  PROP_TRIAL_START_DATE :                        'metacert.cryptonite.general.trial.start.date',
+  PROP_SUBSCRIPTION_DATA :                       'metacert.cryptonite.general.subscription.data',
 
   /* Default properties and values. */
   DEFAULT_PROPERTIES : {
@@ -28,7 +32,11 @@ var PropertyDAO = {
     PROP_DISPLAY_INSTALL_BANNER :                false,
     PROP_UPDATE_BANNER_TAB_ID :                  -1,
     PROP_INSTALL_BANNER_TAB_ID :                 -1,
-    PROP_IS_ACCESS_ANYWAY_FIX_APPLIED :          false
+    PROP_IS_ACCESS_ANYWAY_FIX_APPLIED :          false,
+    PROP_IS_EXTENSION_PAID :                     false,
+    PROP_IS_TRIAL_ACTIVE :                       true,
+    PROP_TRIAL_START_DATE :                      null,
+    PROP_SUBSCRIPTION_DATA :                     { }
   },
 
   /**

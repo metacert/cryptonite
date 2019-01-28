@@ -12,12 +12,11 @@ var CryptoniteUtils = {
   metaCertLogo: "images/metacert-logo.png",
 
   flaggedCategories: [
-    'malware-phishing',
-    'crypto-phish'
+    'red',
   ],
 
   cryptoGoodCategories: [
-    'cryptocurrency'
+    'green'
   ],
 
   CHECK_INTERNALLY_DOMAINS_MAP: {
@@ -122,6 +121,10 @@ var CryptoniteUtils = {
    * @param {String} aBlockedUrl the blocked url to be shown in the block page.
    */
   showBlockPage : function(aTabId, aArguments) {
+    if("undefined" == typeof(aArguments.redirect) || null === aArguments.redirect || "" === aArguments.redirect) {
+      aArguments.redirect = "about:blank";
+    }
+
     var targetUrl = CryptoniteUtils.setUrlArguments(ConfigSettings.METACERT_BLOCKPAGE, aArguments);
     chrome.tabs.update(aTabId, {url: targetUrl});
   },
@@ -261,7 +264,11 @@ var CryptoniteUtils = {
            "about:newtab" == decodeURIComponent(aTab.url) ) {
           aTab.url = "about:blank";
         }
-        Background.lastUrl = aTab.url;
+
+        //only add an url after the page has completely loaded
+        if(!aIsPageLoading) {
+          Background.lastUrl = aTab.url;
+        }
       }
     }
   },
@@ -285,6 +292,15 @@ var CryptoniteUtils = {
     var port = null;
     var accessAnyway = false;
     var url;
+
+    //if the user has not paid or the trial has expired, we will not flag any website
+    if(!CryptoniteUtils.canUseExtension()) {
+      var trialExpiredTooltip = $.i18n.getString("button_openPopup_trial_expired");
+      CryptoniteUtils.setBrowserActionStyleForTab(
+        ConfigSettings.BADGE_BACKGROUND_RED, ConfigSettings.BADGE_TOOLTIP_EXCLAMATION,
+        trialExpiredTooltip, CryptoniteUtils.defaultIcon, aTab);
+      return;
+    }
 
     var checkCallback = function(aResponse) {
       if (aResponse) {
@@ -649,7 +665,6 @@ var CryptoniteUtils = {
 
     chrome.browserAction.setIcon(details, null);
     chrome.browserAction.setTitle(tooltipDetails);
-
     Background.lastUrl = aTab.url;
   },
 
@@ -789,17 +804,21 @@ var CryptoniteUtils = {
     var knownDomainsRegExpLastPart = "(?![a-zA-Z0-9-]+)(\\.[a-zA-Z0-9-]+)*";
 
     if(null == CryptoniteUtils.knownDomainsRegExp) {
-      knownDomainsRegExp = "".concat(
-        knownDomainsRegExpFirstPart,
-        "(",
-        ConfigSettings.KNOWN_DOMAINS_ARRAY_REG_EXP.join("|").replace(/\./g, "\\.").toLowerCase(),
-        ")",
-        knownDomainsRegExpLastPart);
+      if(0 < ConfigSettings.KNOWN_DOMAINS_ARRAY_REG_EXP.length) {
+        knownDomainsRegExp = "".concat(
+          knownDomainsRegExpFirstPart,
+          "(",
+          ConfigSettings.KNOWN_DOMAINS_ARRAY_REG_EXP.join("|").replace(/\./g, "\\.").toLowerCase(),
+          ")",
+          knownDomainsRegExpLastPart);
 
-      try {
-        CryptoniteUtils.knownDomainsRegExp = new RegExp(knownDomainsRegExp, "i");
-      } catch (ex) {
-        //this regex matches nothing and we will need to call the API
+        try {
+          CryptoniteUtils.knownDomainsRegExp = new RegExp(knownDomainsRegExp, "i");
+        } catch (ex) {
+          //this regex matches nothing and we will need to call the API
+          CryptoniteUtils.knownDomainsRegExp = new RegExp(/[]/);
+        }
+      } else {
         CryptoniteUtils.knownDomainsRegExp = new RegExp(/[]/);
       }
     }
@@ -1026,5 +1045,378 @@ var CryptoniteUtils = {
    */
   submitSubscriptionData: function(aData, aCallback) {
     MetaCertApi.submitSubscriptionData(aData, aCallback);
+  },
+
+  /**
+   * Sends the data to check for the purchase code entered by teh user.
+   *
+   * @param {Object} aData the data to be sent to the purchase API. In this case we only send the purchase code.
+   * @param {Function} aCallback the callback to call after we send the data to the purchase API.
+   */
+  submitPurchaseCodeData: function(aData, aCallback) {
+    MetaCertApi.submitPurchaseCodeData(aData, aCallback);
+  },
+
+  /**
+   * Sets the trial dates for the extension.
+   */
+  setTrialDates: function() {
+    console.log("setting trial dates");
+
+    //trial number of days
+    var trialDays = parseInt(ConfigSettings.TRIAL_DAYS);
+    //trial ends in TRIAL_DAYS amount of days
+    var trialDaysMilliseconds = trialDays * 86400000;
+    //trial start
+    var currentTimestamp = Date.now();
+
+    if (null == PropertyDAO.get(PropertyDAO.PROP_TRIAL_START_DATE)) {
+      PropertyDAO.set(PropertyDAO.PROP_TRIAL_START_DATE, currentTimestamp);
+      //display a badge to indicate the expiration of the trial period after ConfigSettings.TRIAL_DAYS days
+      setTimeout(function() {
+        PropertyDAO.set(PropertyDAO.PROP_IS_TRIAL_ACTIVE, false);
+        if(!CryptoniteUtils.isExtensionPaid()) {
+          CryptoniteUtils.setTrialExpired();
+        }
+      }, trialDaysMilliseconds);
+    } else {
+      var trialEndTimestamp = PropertyDAO.get(PropertyDAO.PROP_TRIAL_START_DATE) + trialDaysMilliseconds;
+      if(currentTimestamp > trialEndTimestamp &&
+         !CryptoniteUtils.isExtensionPaid()) {
+        CryptoniteUtils.setTrialExpired();
+      }
+    }
+  },
+
+  /**
+   * Sets the trial period as expired.
+   */
+  setTrialExpired: function() {
+    var trialExpiredTooltip = $.i18n.getString("button_openPopup_trial_expired");
+    PropertyDAO.set(PropertyDAO.PROP_IS_TRIAL_ACTIVE, false);
+    CryptoniteUtils.setBrowserActionStyle(
+      ConfigSettings.BADGE_BACKGROUND_RED, ConfigSettings.BADGE_TOOLTIP_EXCLAMATION,
+      trialExpiredTooltip, CryptoniteUtils.defaultIcon);
+  },
+
+  /**
+   * Resets the trial expiration to give users more free time of the extension.
+   */
+  resetTrialExpired: function() {
+    var tooltip = $.i18n.getString("button_openPopup_black");
+    PropertyDAO.set(PropertyDAO.PROP_IS_TRIAL_ACTIVE, true);
+    CryptoniteUtils.setBrowserActionStyle(null, "", tooltip, null);
+  },
+
+  /**
+   * Checks if the extension trial is active.
+   *
+   * @returns {Boolean} true if the trial on the extension is active, false otherwise.
+   */
+  isTrialActive: function() {
+    return PropertyDAO.get(PropertyDAO.PROP_IS_TRIAL_ACTIVE);
+  },
+
+  /**
+   * Checks if the extension has been paid on the Chrome webstore, by retrieving the flag on the localstorage.
+   *
+   * @returns {Boolean} true if the extension has been paid on the Chrome webstore, false otherwise.
+   */
+  isExtensionPaid: function() {
+    return PropertyDAO.get(PropertyDAO.PROP_IS_EXTENSION_PAID);
+  },
+
+  /**
+   * Determines if the user can use the extension, being either on a paid subscription or an active trial.
+   *
+   * @returns {Boolean} true if the extension can be used, false otherwise.
+   */
+  canUseExtension: function() {
+    var canUseExtension = false;
+    if(CryptoniteUtils.isExtensionPaid() || CryptoniteUtils.isTrialActive()) {
+      canUseExtension = true;
+    }
+
+    return canUseExtension;
+  },
+
+  /*
+   * Checks if the extension has been paid on the Chrome webstore.
+   *
+   * @param {Function} aCallback the callback to call after we check if the extension has been paid on the Chrome webstore.
+   */
+  getExtensionPurchases: function(aShouldDisplayThankYouPage, aCallback) {
+    //call the inapp purchases ONLY if we are on the Chrome browser,
+    //because that API only works for Chrome and will produce errors on other browsers.
+    if("chrome" !== ConfigSettings.BROWSER_NAME) {
+      if(aCallback) {
+        aCallback();
+      }
+    } else {
+      google.payments.inapp.getPurchases({
+        'parameters': {'env': 'prod'},
+        'success': function(aResponse) {
+          CryptoniteUtils.getPurchasesSuccess(aResponse, aShouldDisplayThankYouPage, aCallback);
+        },
+        'failure': function(aResponse) {
+          CryptoniteUtils.getPurchasesError(aResponse, aCallback);
+        }
+      });
+    }
+  },
+
+  /**
+   * Process the data after getting all the purchases done by the user.
+   *
+   * @param {Object} aResponse the response from the server with all the purchases done by the user.
+   */
+  getPurchasesSuccess: function(aResponse, aShouldDisplayThankYouPage, aCallback) {
+    var paymentSource = CryptoniteUtils.getPaymentSource();
+    var tempResponse = '{ "response": { "details": [ { "kind": "chromewebstore#payment", "itemId": "1234567", "sku": "metacert_yearly_subscription", "createdTime": "1387221267248", "state": "ACTIVE" } ] } }';
+    //aResponse = JSON.parse(tempResponse);
+    var shouldCallStripeCheck = true;
+
+    console.log(" +++ getPurchases SUCCESS +++ ");
+    console.log(aResponse);
+    if(0 < aResponse.response.details.length) {
+      $.each(aResponse.response.details, function(aIndex, aValue) {
+        console.log("item: ", aValue);
+        //check if the user has paid for the extension
+        if(ConfigSettings.METACERT_WEBSTORE_PLAN_ID == aValue.sku) {
+          if(ConfigSettings.METACERT_WEBSTORE_PLAN_ACTIVE == aValue.state &&
+             ConfigSettings.PAYMENT_SOURCE_STRIPE !== paymentSource) {
+            //set the extension as paid and display the whole UI as extension active
+            shouldCallStripeCheck = false;
+            CryptoniteUtils.setExtensionPaid();
+            if(aShouldDisplayThankYouPage) {
+              CryptoniteUtils.displayThankYouPage();
+            }
+          } else {
+            //the Google payment has expired
+            if(ConfigSettings.PAYMENT_SOURCE_STRIPE !== paymentSource) {
+              //reset the extension state if there is no previous Stripe payment
+              CryptoniteUtils.setExtensionUnpaid();
+            }
+          }
+        }
+      });
+    }
+
+    if(shouldCallStripeCheck && aCallback) {
+      aCallback();
+    }
+  },
+
+  /**
+   * Process the data after getting an error when retrieving all the purchases done by the user.
+   *
+   * @param {Object} aResponse the response from the server with all the purchases done by the user.
+   */
+  getPurchasesError: function(aResponse, aCallback) {
+    console.log(" +++ getPurchases FAILURE +++ ");
+    console.log(aResponse);
+
+    if(aCallback) {
+      aCallback();
+    }
+  },
+
+  /**
+   * Buys a subscription for the Cryptonite addon.
+   * The buying user is the user that is logged in on the Chrome websites at the moment of the purchase.
+   */
+  buyCryptoniteExtension: function() {
+    google.payments.inapp.buy({
+      'parameters': {'env': 'prod'},
+      'sku': ConfigSettings.METACERT_WEBSTORE_PLAN_ID,
+      'success': CryptoniteUtils.onPurchaseSuccess,
+      'failure': CryptoniteUtils.onPurchaseFailure
+    });
+  },
+
+  /**
+   * Callback to be called after the user has paid for the extension.
+   *
+   * @param {Object} aResponse the response from the server with the purchase information.
+   */
+  onPurchaseSuccess: function(aResponse) {
+    console.log(" +++ onPurchase SUCCESS +++ ");
+    console.log(aResponse);
+    //remove all badges
+    var tooltip = $.i18n.getString("button_openPopup_black");
+    CryptoniteUtils.setBrowserActionStyle(null, "", tooltip, null);
+    PropertyDAO.set(PropertyDAO.PROP_IS_EXTENSION_PAID, true);
+    console.log("Your payment has been completed. Thank you");
+    CryptoniteUtils.displayThankYouPage();
+  },
+
+  /**
+   * Callback to be called when there are errors after the user tried to pay for the extension.
+   *
+   * @param {Object} aResponse the response from the server with the purchase error information.
+   */
+  onPurchaseFailure: function(aResponse) {
+    console.log(" +++ onPurchaseFail FAILURE +++ ");
+    console.log(aResponse);
+    CryptoniteUtils.getExtensionPurchases(true);
+  },
+
+  /**
+   * Displays a thank you page after a purchase.
+   */
+  displayThankYouPage: function() {
+    var width = 400;
+    var height = 360;
+    var left = (screen.width - width) / 2;
+    var top = (screen.height - height) / 4;
+    var windowSettings = "width = " + width + ", height = " + height + ", top =  " + top + ", left = " + left;
+    var thankYouPageURL = chrome.extension.getURL('html/popup/thankYou.html');
+    var generator = window.open(thankYouPageURL,'Thank You', windowSettings);
+    generator.document.close();
+  },
+
+  /**
+   * Sets the style for the extension icon in the address bar.
+   *
+   * @param {Object} aColor the color for the badge.
+   * @param {Object} aBadgeText the text for the badge.
+   * @param {Object} aTooltip the tooltip for the extension icon.
+   * @param {Object} aIconPath the path for the extension icon.
+   */
+  setBrowserActionStyle: function(aColor, aBadgeText, aTooltip, aIconPath) {
+    var callback = function(aTabs) {
+      $.each(aTabs, function(aIndex, aTab) {
+        CryptoniteUtils.setBrowserActionStyleForTab(aColor, aBadgeText, aTooltip, aIconPath, aTab);
+      });
+    };
+    chrome.tabs.query({ }, callback);
+  },
+
+  /*
+   * Sets the style for the extension icon in the address bar, for a specific tab.
+   *
+   * @param {Object} aColor the color for the badge.
+   * @param {Object} aBadgeText the text for the badge.
+   * @param {Object} aTooltip the tooltip for the extension icon.
+   * @param {Object} aIconPath the path for the extension icon.
+   */
+  setBrowserActionStyleForTab: function(aColor, aBadgeText, aTooltip, aIconPath, aTab) {
+    if (null !== aColor) {
+      chrome.browserAction.setBadgeBackgroundColor({
+        tabId: aTab.id,
+        color: aColor
+      });
+    }
+
+    if(null !== aBadgeText) {
+      chrome.browserAction.setBadgeText({
+        tabId: aTab.id,
+        text: aBadgeText
+      });
+    }
+
+    if(null !== aTooltip) {
+      chrome.browserAction.setTitle({
+        tabId: aTab.id,
+        title: aTooltip
+      });
+    }
+
+    if(null !== aIconPath) {
+      chrome.browserAction.setIcon({
+        tabId: aTab.id,
+        path: aIconPath
+      });
+    }
+  },
+
+  /**
+   * Sets the extension as "paid" and stores the subscription values.
+   *
+   * @argument {Object} aData the subscription data.
+   */
+  setExtensionPaid: function(aData) {
+    CryptoniteUtils.setBrowserActionStyle(null, "", null, null);
+    PropertyDAO.set(PropertyDAO.PROP_IS_EXTENSION_PAID, true);
+    if("undefined" !== typeof(aData)) {
+      //TODO: remove this line of code when Kamrul adds that key on the server response.
+      aData.data.paymentSource = ConfigSettings.PAYMENT_SOURCE_STRIPE;
+      PropertyDAO.set(PropertyDAO.PROP_SUBSCRIPTION_DATA, aData.data);
+      ConfigSettings.SUBSCRIPTION_TYPE = aData.data.planType;
+      console.log("You bought " + aData.data.planName + ". You have paid for the extension");
+    } else {
+      var data = {
+        hasUsed: true,
+        planName: ConfigSettings.DEFAULT_PLAN_NAME,
+        planTerm: ConfigSettings.DEFAULT_PLAN_TERM,
+        planType: ConfigSettings.DEFAULT_SUBSCRIPTION_TYPE,
+        status: ConfigSettings.DEFAULT_SUBSCRIPTION_STATUS,
+        subscriptionId: ConfigSettings.DEFAULT_SUBUSCRIPTION_ID,
+        paymentSource: ConfigSettings.PAYMENT_SOURCE_GOOGLE
+      };
+      PropertyDAO.set(PropertyDAO.PROP_SUBSCRIPTION_DATA, data);
+      ConfigSettings.SUBSCRIPTION_TYPE = ConfigSettings.DEFAULT_SUBSCRIPTION_TYPE;
+      console.log("--- Thanks. You have paid for the extension ---");
+    }
+  },
+
+  /*
+   * Sets the extension as "paid = false" and modifies the UI accordingly.
+   * The unpaid status will be set if the status of the subscription on Stripe is different than "active".
+   */
+  setExtensionUnpaid: function() {
+    PropertyDAO.set(PropertyDAO.PROP_IS_EXTENSION_PAID, false);
+    if(CryptoniteUtils.isTrialActive()) {
+     CryptoniteUtils.resetTrialExpired();
+    } else {
+      CryptoniteUtils.setTrialExpired();
+    }
+  },
+
+  /**
+   * Checks daily for the subscription status on Stripe.
+   */
+  setDailyStatusCheck: function() {
+    var subscriptionData = { };
+    var data = { };
+    var status;
+    var lookupFrecuencyMilliseconds = ConfigSettings.LOOKUP_DAYS * 86400000;
+    var stripeCheckCallback = function(aIsCallSuccessful, aData) {
+      if(aIsCallSuccessful && false == aData.error) {
+        status = aData.data.status;
+        if(ConfigSettings.DEFAULT_SUBSCRIPTION_STATUS == status) {
+          CryptoniteUtils.setExtensionPaid(aData);
+        } else {
+          CryptoniteUtils.setExtensionUnpaid();
+        }
+      }
+    };
+
+    var stripeCheck = function() {
+      subscriptionData = PropertyDAO.get(PropertyDAO.PROP_SUBSCRIPTION_DATA);
+      if("subscriptionId" in subscriptionData) {
+        data.subid = subscriptionData.subscriptionId;
+        MetaCertApi.checkExtensionStatus(data, stripeCheckCallback);
+      }
+    };
+
+    setInterval(function() {
+      CryptoniteUtils.getExtensionPurchases(false, stripeCheck);
+    }, lookupFrecuencyMilliseconds);
+  },
+
+  /**
+   * Gets the payment source: Google Pay: 'google' or Stripe payments: 'stripe'.
+   *
+   * @returns {String} the payment source: Google Pay: 'google' or Stripe payments: 'stripe'.
+   */
+  getPaymentSource: function() {
+    var paymentSource = null;
+    var subscriptionData = PropertyDAO.get(PropertyDAO.PROP_SUBSCRIPTION_DATA);
+    if("paymentSource" in subscriptionData) {
+      paymentSource = subscriptionData.paymentSource;
+    }
+
+    return paymentSource;
   }
 };

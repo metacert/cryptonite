@@ -23,6 +23,11 @@ var Background = {
     //we need to set the property PROP_IS_ACCESS_ANYWAY_FIX_APPLIED to a false value in here.
     PropertyDAO.set(PropertyDAO.PROP_IS_ACCESS_ANYWAY_FIX_APPLIED, false);
     CryptoniteUtils.setKnownDomainsRegExp();
+
+    //set the trial dates.
+    CryptoniteUtils.setTrialDates();
+    //figure out if the extension has been paid or not.
+    CryptoniteUtils.getExtensionPurchases(false);
   }
 };
 
@@ -52,9 +57,12 @@ chrome.tabs.onUpdated.addListener(function(aTabId, aChangeInfo, aTab) {
  */
 chrome.runtime.onInstalled.addListener(function(aDetails) {
   if(aDetails.reason == "install" || aDetails.reason == "update") {
+    //set the trial dates.
+    CryptoniteUtils.setTrialDates();
     CryptoniteUtils.removeFromAccessAnyway();
+    CryptoniteUtils.setDailyStatusCheck();
     if(aDetails.reason == "update") {
-      //XXX: do not display the update banner for the latest version
+      //TODO: make this property true if we want to display the banner after an update.
       PropertyDAO.set(PropertyDAO.PROP_DISPLAY_UPDATE_BANNER, false);
       PropertyDAO.set(PropertyDAO.PROP_UPDATE_BANNER_TAB_ID, -1);
     }
@@ -83,6 +91,8 @@ chrome.runtime.onInstalled.addListener(function(aDetails) {
 chrome.runtime.onStartup.addListener(function() {
   //let's clear the access-anyway list every time we start the browser
   PropertyDAO.set(PropertyDAO.PROP_ACCESS_ANYWAY_URLS_ARRAY, []);
+  //set the trial data if it has not been set
+  CryptoniteUtils.setTrialDates();
 });
 
 /**
@@ -143,25 +153,37 @@ chrome.runtime.onMessage.addListener(function(aRequest, aSender, aSendResponse) 
       break;
 
     case 'checkURL':
+      var canUseExtension = CryptoniteUtils.canUseExtension();
+      responseObj = {};
+      responseObj.nodeId = aRequest.nodeId;
+      responseObj.url = aRequest.url;
+      responseObj.operation = 'checkURL';
+      responseObj.isBannerAnnotationEnabled =
+        PropertyDAO.get(PropertyDAO.PROP_ENABLE_BANNER_ANNOTATION);
+      responseObj.areWebsiteAnnotationsEnabled =
+        PropertyDAO.get(PropertyDAO.PROP_ENABLE_WEBSITE_ANNOTATIONS);
+      responseObj.areTwitterMentionsAnnotationsEnabled =
+        PropertyDAO.get(PropertyDAO.PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS);
+      responseObj.canUseExtension = canUseExtension;
+
       var checkURLCallback = function(aResponse) {
         var urlType = CryptoniteUtils.getURLType(aResponse);
-        responseObj = {};
-        responseObj.nodeId = aRequest.nodeId;
-        responseObj.url = aRequest.url;
-        responseObj.operation = 'checkURL';
         responseObj.type = urlType.type;
         responseObj.placeFound = urlType.placeFound;
-        responseObj.isBannerAnnotationEnabled =
-          PropertyDAO.get(PropertyDAO.PROP_ENABLE_BANNER_ANNOTATION);
-        responseObj.areWebsiteAnnotationsEnabled =
-          PropertyDAO.get(PropertyDAO.PROP_ENABLE_WEBSITE_ANNOTATIONS);
-        responseObj.areTwitterMentionsAnnotationsEnabled =
-          PropertyDAO.get(PropertyDAO.PROP_ENABLE_TWITTER_MENTIONS_ANNOTATIONS);
-
         chrome.tabs.sendMessage(aSender.tab.id, responseObj);
       };
 
-      MetaCertApi.checkUrl(aRequest.url, aRequest.nodeId, ConfigSettings.METACERT_WEBSITE_INTERNAL_URL, checkURLCallback);
+      if(canUseExtension) {
+        MetaCertApi.checkUrl(aRequest.url, aRequest.nodeId, ConfigSettings.METACERT_WEBSITE_INTERNAL_URL, checkURLCallback);
+      } else {
+        responseObj.type = "extensionNotPaid";
+        chrome.tabs.sendMessage(aSender.tab.id, responseObj);
+      }
+
+      break;
+
+    case 'buyExtension':
+      CryptoniteUtils.buyCryptoniteExtension();
       break;
   }
   return true;

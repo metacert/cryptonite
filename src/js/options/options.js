@@ -55,6 +55,24 @@ var Options = {
       aEvent.preventDefault();
       Options.submitSubscriptionData();
     });
+
+    $('#cryptonite-purchase-registration-form').submit(function(aEvent) {
+      aEvent.preventDefault();
+      Options.submitPurchaseRegistrationData();
+    });
+
+    if(CryptoniteUtils.isExtensionPaid()) {
+      var subscriptionData = PropertyDAO.get(PropertyDAO.PROP_SUBSCRIPTION_DATA);
+      var planName = subscriptionData.planName;
+      var subscriptionId = subscriptionData.subscriptionId;
+      $("#cryptonite-purchase-registration-data-entry").hide();
+      $("#cryptonite-purchase-registration-data-display").show();
+      $("#options-purchase-registration-plan-name").text(planName);
+      $("#options-purchase-registration-subscription-id").text(subscriptionId);
+    } else {
+      $("#cryptonite-purchase-registration-data-display").hide();
+      $("#cryptonite-purchase-registration-data-entry").show();
+    }
   },
 
   /**
@@ -147,6 +165,64 @@ var Options = {
     }
   },
 
+
+
+  /**
+   * Sends the data to activate a purchase code.
+   */
+  submitPurchaseRegistrationData: function() {
+    var subscriptionId = $('#cryptonite-purchase-registration-code').val();
+    var data = { 'subid': subscriptionId };
+    var callback = function(aIsCallSuccessful, aData) {
+      console.log("aIsCallSuccessful", aIsCallSuccessful);
+      console.log("aData", aData);
+      $('#cryptonite-purchase-registration-code').val("");
+      $("#cryptonite-purchase-registration-submit-button").removeAttr("disabled");
+      $("#cryptonite-purchase-registration-submit-button .cryptonite-purchase-registration-loading-image").hide();
+      $("#cryptonite-purchase-registration-submit-button #cryptonite-purchase-registration-submit-button-text").text(
+        $.i18n.getString("options_purchase_registration_button_submit"));
+
+      if(aIsCallSuccessful) {
+        if("false" == aData.error || false == aData.error) {
+          var planName = "";
+          var subscriptionId = "";
+
+          if("undefined" !== typeof aData.data.planName) {
+            planName = aData.data.planName;
+          }
+          if("undefined" !== typeof aData.data.subscriptionId) {
+            subscriptionId = aData.data.subscriptionId;
+          }
+
+          //if the code activation was successfull, let's make the whole Cryptonite addon appear activated
+          $(".cryptonite-purchase-registration-error").css("visibility", "hidden");
+          $("#cryptonite-purchase-registration-data-entry").hide();
+          $("#cryptonite-purchase-registration-data-display").show();
+          $("#options-purchase-registration-plan-name").text(planName);
+          $("#options-purchase-registration-subscription-id").text(subscriptionId);
+
+          //set the extension as paid and display the whole UI as extension active
+          CryptoniteUtils.setExtensionPaid(aData);
+        } else {
+          //if the API call failed, let's display the message coming from the server
+          $("#cryptonite-purchase-registration-data-display").hide();
+          $("#cryptonite-purchase-registration-error-01").text(aData.message);
+          $(".cryptonite-purchase-registration-error").css("visibility", "visible");
+        }
+      } else {
+        //if the API call failed, let's display a generic message
+        $("#cryptonite-purchase-registration-error-01").text(
+          $.i18n.getString("options_purchase_registration_error_01"));
+        $(".cryptonite-purchase-registration-error").css("visibility", "visible");
+      }
+    };
+
+    $("#cryptonite-purchase-registration-submit-button").attr("disabled", "disabled");
+    $("#cryptonite-purchase-registration-submit-button .cryptonite-purchase-registration-loading-image").show();
+    $("#cryptonite-purchase-registration-submit-button #cryptonite-purchase-registration-submit-button-text").text(
+      $.i18n.getString("options_beta_program_sending"));
+    CryptoniteUtils.submitPurchaseCodeData(data, callback);
+  },
 
   /**
    * Unitializes the object.

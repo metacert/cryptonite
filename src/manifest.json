@@ -3,7 +3,7 @@
   "name": "__MSG_extension_name__",
   "description": "__MSG_extension_description__",
   "short_name": "metacert-cryptonite",
-  "version": "1.4.31",
+  "version": "2.2.3",
   "applications": {
     "gecko": {
       "id": "{721a41c0-5e10-45a9-8347-ede4ec3183e8}"
@@ -15,6 +15,7 @@
       "js/lib/jquery-3.3.1.min.js",
       "js/lib/i18n.js",
       "js/lib/jquery.i18n.js",
+      "js/lib/buy.js",
       "js/utils/cryptoniteUtils.js",
       "js/utils/propertyDAO.js",
       "js/background/configSettings.js",
@@ -57,7 +58,6 @@
     "<all_urls>"
   ],
   "web_accessible_resources": [
-    "js/lib/jquery-3.1.1.min.map",
     "images/*",
     "fonts/*"
   ]
