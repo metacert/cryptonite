@@ -15,7 +15,7 @@ var Popup = {
     // Apply locale to the relevant nodes.
     $("[rel^=i18n],[title^=i18n],[data-val-required^=i18n],[placeholder^=i18n]").i18n({ attributeNames: [ "rel", "title", "data-val-required", "placeholder" ] });
 
-    $('#cryptonite-go-to-options').click(function() {
+    $('#cryptonite-go-to-options, #cryptonite-activate-license').click(function() {
       if("undefined" != typeof(browser)) {
         browser.runtime.openOptionsPage();
       } else {
@@ -53,6 +53,31 @@ var Popup = {
     this.fixPopupClose();
     //use the corresponding favicon for each bookmark.
     $('.cryptonite-history-empty-image').attr('src', historyEmptyImage);
+    //modify the pop up UI depending on the extension state: paid, trial active, trial expired.
+    if(PropertyDAO.get(PropertyDAO.PROP_IS_EXTENSION_PAID)) {
+      $('.cryptonite-trial-container').hide();
+      $('.cryptonite-subscription-container').show();
+    } else {
+      $('.cryptonite-subscription-container').hide();
+      $('.cryptonite-trial-container').show();
+      if(CryptoniteUtils.isTrialActive()) {
+        $(".cryptonite-trial-expired").hide();
+        $(".cryptonite-trial-active").show();
+      }
+      else {
+        $(".cryptonite-trial-active").hide();
+        $(".cryptonite-trial-expired").show();
+      }
+    }
+
+    $('.cryptonite-buy-now-button').click(function() {
+      //we need to initiate the buying code from the background, because if we start on the pop up,
+      //the callbacks are lost and not called by the Chrome pay api
+      var buyExtensionParameters = {
+        'operation': 'buyExtension'
+      };
+      chrome.runtime.sendMessage(null, buyExtensionParameters, null, function(aResponse) { });
+    });
   },
 
   /**

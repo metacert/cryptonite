@@ -29,23 +29,107 @@
         <div class="cryptonite-pure-menu">
             <!-- <a class="pure-menu-heading" href="#">MetaCert</a> -->
             <ul class="cryptonite-pure-menu-list">
-              <li class="cryptonite-pure-menu-item cryptonite-selected" id="cryptonite-settings">
+              <li class="cryptonite-pure-menu-item cryptonite-selected" id="cryptonite-purchase-registration">
+                <a class="cryptonite-pure-menu-link" href="#" rel="i18n[options.nav.purchase.registration]"></a>
+              </li>
+              <li class="cryptonite-pure-menu-item" id="cryptonite-settings">
                 <a class="cryptonite-pure-menu-link" href="#" rel="i18n[options.nav.settings]"></a>
               </li>
               <li class="cryptonite-pure-menu-item" id="cryptonite-chatbot">
                 <a class="cryptonite-pure-menu-link" href="#" rel="i18n[options.nav.chatbot]"></a>
               </li>
               <li class="cryptonite-pure-menu-item">
-                <a class="cryptonite-pure-menu-link" target="_blank" href="https://metacert.uservoice.com/forums/906502-cryptonite-browser-extension" rel="i18n[options.nav.support]"></a>
+                <a class="cryptonite-pure-menu-link" target="_blank"
+                   href="https://metacert.uservoice.com/forums/906502-cryptonite-browser-extension"
+                   rel="i18n[options.nav.support]"></a>
               </li>
               <li class="cryptonite-pure-menu-item">
-                <a id="cryptonite-rate-us" class="cryptonite-pure-menu-link" target="_blank" href="#" rel="i18n[options.nav.rateus]"></a>
+                <a id="cryptonite-rate-us" class="cryptonite-pure-menu-link" target="_blank"
+                   href="#" rel="i18n[options.nav.rateus]"></a>
               </li>
             </ul>
         </div>
     </div>
 
     <div id="cryptonite-main">
+        <div id="cryptonite-purchase-registration-wrapper" class="cryptonite-prefs-page-content">
+            <div class="cryptonite-subsection">
+
+                <div class="cryptonite-left-group" id="cryptonite-purchase-registration-data-entry">
+                    <div class="cryptonite-hint" rel="i18n[options.purchase.registration.enter.purchase.01]"></div>
+                    <form id="cryptonite-purchase-registration-form" class="cryptonite-beta-program-form" action="#">
+                        <ul>
+                            <li>
+                                <input name="cryptonite-purchase-registration-code" required="required"
+                                       id="cryptonite-purchase-registration-code"
+                                       class="cryptonite-field-style crytonite-field-full"
+                                       placeholder="i18n[options.purchase.registration.placeholder]" />
+                                <br />
+                                <button type="submit" id="cryptonite-purchase-registration-submit-button"
+                                        class="submitBtn">
+                                    <span id="cryptonite-purchase-registration-submit-button-text"
+                                          rel="i18n[options.purchase.registration.button.submit]">
+                                    </span>
+                                    <img class="cryptonite-purchase-registration-loading-image" src="/images/spinner.gif">
+                                </button>
+                            </li>
+                        </ul>
+                    </form>
+                    <div class="cryptonite-hint cryptonite-error cryptonite-purchase-registration-error">
+                        <span id="cryptonite-purchase-registration-error-01" rel="i18n[options.purchase.registration.error.01]"></span><br />
+                        <span id="cryptonite-purchase-registration-error-02" rel="i18n[options.purchase.registration.error.02]"></span>
+                    </div>
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.purchase.registration.purchase]"></span><br />
+                        <a href="https://metacertprotocol.com/cryptonite.html#pricing-plan"
+                           target="_blank" rel="i18n[options.purchase.registration.purchase.link]"></a>
+                    </div>
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.purchase.registration.contact.support]"></span><br />
+                        <a href="https://metacert.uservoice.com/forums/906502-cryptonite-browser-extension"
+                           target="_blank" rel="i18n[options.purchase.registration.contact.support.link]"></a>
+                    </div>
+                </div>
+
+                <div class="cryptonite-left-group" id="cryptonite-purchase-registration-data-display">
+                    <div class="cryptonite-section-title" rel="i18n[options.purchase.registration.thanks.title]"></div>
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.purchase.registration.plan]"></span>
+                        <span id="options-purchase-registration-plan-name"></span><br />
+                        <span rel="i18n[options.purchase.registration.reference.number]"></span>
+                        <span id="options-purchase-registration-subscription-id"></span>
+                    </div>
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.purchase.registration.for.email.01]"></span><br />
+                        <a href="https://metacert.com/email/" target="_blank"
+                           rel="i18n[options.purchase.registration.for.email.02]"></a>
+                    </div>
+                    <!-- media sharing commented out until we have the share links
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.purchase.registration.social.media]"></span><br />
+                        <span class="cryptonite-purchase-registration-social-media-images">
+                            <a href="https://twitter.com/metacert" rel="">
+                                <img class="cryptonite-purchase-registration-social-media-image" src="/images/social-media/twitter.png">
+                            </a>
+                            <a href="#" rel="">
+                                <img class="cryptonite-purchase-registration-social-media-image" src="/images/social-media/facebook.png">
+                            </a>
+                            <a href="#" rel="">
+                                <img class="cryptonite-purchase-registration-social-media-image" src="/images/social-media/linkedin.png">
+                            </a>
+                        </span>
+                    </div>
+                    -->
+                    <div class="cryptonite-hint">
+                        <span rel="i18n[options.purchase.registration.contact.support]"></span><br />
+                        <a href="https://metacert.uservoice.com/forums/906502-cryptonite-browser-extension"
+                           target="_blank" rel="i18n[options.purchase.registration.contact.support.link]"></a>
+                    </div>
+                </div>
+
+                <div class="cryptonite-right-group"></div>
+            </div>
+        </div>
         <div id="cryptonite-settings-wrapper" class="cryptonite-prefs-page-content">
             <div class="cryptonite-subsection">
                 <div class="cryptonite-left-group">

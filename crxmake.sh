@@ -13,14 +13,21 @@ VERSION_EXPR="\"version\": \"\(.*\)\","
 CURRENT_VERSION=$(sed -n "s_.*${VERSION_EXPR}_\1_ p" < $MANIFEST)
 DS_STORE_FILES=".DS_Store"
 
+if [[ $1 == "internal" ]]; then
+  INTERNAL_VERSION="-INTERNAL"
+else
+  INTERNAL_VERSION=""
+fi
+
+
 dir=$DIR
 key=$KEY
 name=$(basename "$dir")
-crx="metacert-cryptonite-$CURRENT_VERSION-$CHROME$EXTENSION"
+crx="metacert-cryptonite-$CURRENT_VERSION$INTERNAL_VERSION-$CHROME$EXTENSION"
 pub="$name.pub"
 sig="$name.sig"
-zip="metacert-cryptonite-$CURRENT_VERSION-$CHROME.zip"
-xpiFirefox="metacert-cryptonite-$CURRENT_VERSION-$FIREFOX.xpi"
+zip="metacert-cryptonite-$CURRENT_VERSION$INTERNAL_VERSION-$CHROME.zip"
+xpiFirefox="metacert-cryptonite-$CURRENT_VERSION$INTERNAL_VERSION-$FIREFOX.xpi"
 #trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 trap 'rm -f "$pub" "$sig"' EXIT
 
@@ -51,6 +58,7 @@ sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
 echo "Wrote $crx"
+echo "Wrote $zip"
 
 # zip up the src dir for Firefox
 cwd=$(pwd -P)

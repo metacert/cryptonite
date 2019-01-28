@@ -7,6 +7,7 @@ var ConfigSettings = {
 
   _extension_version: null,
   _browser_name: null,
+  _subscriptionType: null,
 
   /**
    * Gets the extensions version.
@@ -132,8 +133,42 @@ var ConfigSettings = {
     this._browser_name = value;
   },
 
-  METACERT_API_ENDPOINT_ADDRESS_BAR_URL_ENDPOINT : "",
-  METACERT_API_ENDPOINT_WEBSITE_INTERNAL_URL_ENDPOINT : "",
+  /**
+   * Gets the subscription type: pro, standard.
+   *
+   * @returns {String} a string with the subscription type.
+   */
+  get SUBSCRIPTION_TYPE() {
+    var subscriptionData;
+    var result = ConfigSettings.DEFAULT_SUBSCRIPTION_TYPE;
+
+    if(null == this._subscriptionType) {
+      subscriptionData = PropertyDAO.get(PropertyDAO.PROP_SUBSCRIPTION_DATA);
+      if("planType" in subscriptionData) {
+        this._subscriptionType = subscriptionData.planType;
+        result = subscriptionData.planType;
+      } else {
+        result = ConfigSettings.DEFAULT_SUBSCRIPTION_TYPE;
+      }
+    } else {
+      result = this._subscriptionType;
+    }
+
+    return result;
+  },
+
+  /*
+   * Sets the subscription type.
+   *
+   * @param {String} aType the string with the subscription type: pro, standard.
+   */
+  set SUBSCRIPTION_TYPE(aType) {
+    this._subscriptionType = aType;
+  },
+
+  METACERT_API_ENDPOINT : "",
+  METACERT_API_ENDPOINT_STANDARD : "",
+  METACERT_API_ENDPOINT_PRO : "",
   METACERT_API_KEY : "",
   METACERT_SECURITY_TOKEN : "",
   METACERT_ADDRESS_BAR_URL : "addressBarUrl",
@@ -143,7 +178,7 @@ var ConfigSettings = {
   METACERT_RATE_US_CHROME: "https://chrome.google.com/webstore/detail/cryptonite-by-metacert/keghdcpemohlojlglbiegihkljkgnige/reviews/?utm_source=CryptoniteByMetaCert",
   METACERT_RATE_US_FIREFOX: "https://addons.mozilla.org/en-US/firefox/addon/cryptonite-by-metacert/reviews/?utm_source=CryptoniteByMetaCert",
   METACERT_RATE_US_OPERA: "https://addons.opera.com/extensions/details/cryptonite-by-metacert/?#feedback-container",
-  METACERT_FIRST_RUN_PAGE: "https://metacertprotocol.com/cryptonite-beta?via=cryptonite",
+  METACERT_FIRST_RUN_PAGE: "https://medium.com/metacert/thank-you-for-installing-cryptonite-648d4692dde7",
   METACERT_UPDATE_BETA_PAGE: "https://metacertprotocol.com/cryptonite-beta?via=cryptonite",
   METACERT_MAX_HISTORY_ITEMS: 10,
   METACERT_MAX_HISTORY_ITEMS_IN_ARRAY: 20,
@@ -151,6 +186,12 @@ var ConfigSettings = {
   METACERT_BETA_PROGRAM_SUBSCRIPTION_URL_ENDPOINT: "",
   METACERT_BETA_PROGRAM_SUBSCRIPTION_SECURITY_TOKEN: "",
   METACERT_BETA_PROGRAM_SUBSCRIPTION_CONFIRMATION_PAGE: "",
+
+  METACERT_PURCHASE_CODE_ACTIVATION_ENDPOINT: "",
+  METACERT_PURCHASE_CODE_LOOKUP_ENDPOINT: "",
+
+  METACERT_WEBSTORE_PLAN_ID: "metacert_yearly_subscription",
+  METACERT_WEBSTORE_PLAN_ACTIVE: "ACTIVE",
 
   GOOD_CRYPTO_DOMAINS_ARRAY: [
     "0xproject.com",
@@ -261,123 +302,6 @@ var ConfigSettings = {
   ],
 
   KNOWN_DOMAINS_ARRAY_REG_EXP: [
-    "360.cn",
-    "abcnews.go.com",
-    "accuweather.com",
-    "adobe.com",
-    "alexa.com",
-    "alibaba.com",
-    "aliexpress.com",
-    "amazonaws.com",
-    "aol.com",
-    "apple.com",
-    "archive.org",
-    "ask.com",
-    "avito.ru",
-    "baidu.com",
-    "bbc.co.uk",
-    "bbc.com",
-    "bbm.com",
-    "bet365.com",
-    "bing.com",
-    "block.metacert.com",
-    "bongacams.com",
-    "booking.com",
-    "box.com",
-    "cnn.com",
-    "cnzz.com",
-    "coccoc.com",
-    "dailymail.co.uk",
-    "detail.tmall.com",
-    "diply.com",
-    "disk.yandex.com",
-    "duckduckgo.com",
-    "fc2.com",
-    "flipdrive.com",
-    "foxnews.com",
-    "free-hidrive.com",
-    "globo.com",
-    "gmw.cn",
-    "go2cloud.org",
-    "googleusercontent",
-    "hao123.com",
-    "hidrive.com",
-    "hubic.com",
-    "huffingtonpost.com",
-    "icloud.com",
-    "idrive.com",
-    "imdb.com",
-    "imgur.com",
-    "imo.im",
-    "irc.com",
-    "jd.com",
-    "jumpshare.com",
-    "kakao.com",
-    "latimes.com",
-    "line.me",
-    "live.com",
-    "livejasmin.com",
-    "localhost",
-    "mail.ru",
-    "mediafire.com",
-    "mega.nz",
-    "messenger.com",
-    "metacert-block.com",
-    "microsoft.com",
-    "microsoftonline.com",
-    "msn.com",
-    "mydrive.ch",
-    "naver.com",
-    "nextcloud.com",
-    "nicovideo.jp",
-    "nytimes.com",
-    "office.com",
-    "ok.ru",
-    "onclckds.com",
-    "paypal.com",
-    "pcloud.com",
-    "pinterest.com",
-    "pixnet.net",
-    "popads.net",
-    "pornhub.com",
-    "qq.com",
-    "quora.com",
-    "rakuten.co.jp",
-    "redtube.com",
-    "reuters.com",
-    "reuters.tv",
-    "samsung.com",
-    "sina.com.cn",
-    "skype.com",
-    "slack.com",
-    "snapchat.com",
-    "sohu.com",
-    "soso.com",
-    "soundcloud.com",
-    "spideroak.com",
-    "stackoverflow.com",
-    "sync.com",
-    "taobao.com",
-    "telegram.org",
-    "theguardian.com",
-    "tianya.cn",
-    "tmall.com",
-    "twitch.tv",
-    "txxx.com",
-    "uol.com.br",
-    "usatoday.com",
-    "vk.com",
-    "walmart.com",
-    "washingtonpost.com",
-    "wechat.com",
-    "weibo.com",
-    "wikipedia.org",
-    "wolframalpha",
-    "wsj.com",
-    "xhamster.com",
-    "xnxx.com",
-    "xvideos.com",
-    "yandex.ru"
   ],
 
   //TODO: add new urls here in case we need to remove an url from the access-anyway list.
@@ -387,6 +311,24 @@ var ConfigSettings = {
     "https://www.myetherwallet.com/",
     "https://myetherwallet.com/"
   ],
+
+  //amount of days for the trial period
+  TRIAL_DAYS: 14,
+  //periodic check for the subscription status, in days
+  LOOKUP_DAYS: 1,
+
+  DEFAULT_PLAN_NAME: "Cryptonite - Anti-Phishing for Crypto Enthusiasts",
+  DEFAULT_PLAN_TERM: "annual",
+  DEFAULT_SUBSCRIPTION_TYPE: "pro",
+  DEFAULT_SUBSCRIPTION_STATUS: "active",
+  DEFAULT_SUBUSCRIPTION_ID: "[item purchased from Google Payments]",
+  SUBSCRIPTION_TYPE_PRO: "pro",
+  SUBSCRIPTION_TYPE_STANDARD: "standard",
+  PAYMENT_SOURCE_GOOGLE: "google",
+  PAYMENT_SOURCE_STRIPE: "stripe",
+  BADGE_TOOLTIP_EXCLAMATION: "!",
+  BADGE_BACKGROUND_BLUE: "#000fff",
+  BADGE_BACKGROUND_RED: "#e70000",
 
   /**
    * Initiliazes the object.

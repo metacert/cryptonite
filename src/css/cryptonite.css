@@ -13,6 +13,10 @@
   src: url('/fonts/montserrat/regular/Montserrat-Regular.ttf');
 }
 
+.cryptonite-bold {
+  font-weight: bold;
+}
+
 .cryptonite-popup-body {
   width: 350px;
   min-height: 330px;
@@ -25,7 +29,8 @@
   list-style: none;
   padding: 0px;
   margin: 0px 0px 3px 0px;
-  font: 10pt arial;
+  font-size: 10pt;
+  font-family: Montserrat, Verdana, Geneva, sans-serif;
   letter-spacing: 1px;
   color: #7e7e7e;
 }
@@ -36,7 +41,8 @@
 
 .cryptonite-options-list li.cryptonite-first {
   background-color: #f8f9fa;
-  font: 12pt arial;
+  font-size: 12pt;
+  font-family: Montserrat, Verdana, Geneva, sans-serif;
   margin-bottom: 4px;
   text-align: center;
 }
@@ -171,7 +177,7 @@ input[type=checkbox]:hover {
 }
 /* top banner annotation */
 
-.cryptonite-cryptocurrency {
+.cryptonite-green {
   background-color: #00AA6B;
   color: #FFFFFF;
 }
@@ -308,3 +314,115 @@ div.cryptonite-website-extension-updated-content a {
   padding: 1px 0px 0px 0px;
 }
 /* extension updated annotation */
+
+/* extension trial UI */
+.cryptonite-trial-container {
+  padding: 0px;
+  text-transform: none !important;
+  color: #ffffff;
+  background-color: #243736;
+  border: 2px solid #000000;
+  border-radius: 4px;
+}
+
+.cryptonite-trial-container a {
+  color: #ffffff;
+}
+
+.cryptonite-trial-container a:visited {
+  color: #ffffff;
+}
+
+.cryptonite-trial-status {
+  background-color: #000000;
+}
+
+.cryptonite-trial-status a {
+  float: right;
+}
+
+.cryptonite-buy-now-button {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 10px;
+  background-color: #3D94F6;
+  border: solid #337FED 1px;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.cryptonite-buy-now-button:hover {
+  background: #1E62D0;
+  text-decoration: none;
+}
+
+.cryptonite-trial-copy {
+  padding: 15px 10px;
+  font-weight: bold;
+}
+
+.cryptonite-trial-copy a {
+  color: #ffffff;
+  text-decoration: underline
+}
+
+.cryptonite-trial-description {
+  padding-top: 0px;
+  font-weight: normal;
+  font-size: 9.5pt;
+}
+
+.cryptonite-buy-now-price,
+.cryptonite-purchase-sign-in-copy {
+  padding-top: 3px;
+}
+
+.cryptonite-purchase-already {
+ padding-bottom: 0px;
+}
+
+.cryptonite-get-tokens-01 {
+  padding-bottom: 0px;
+}
+
+.cryptonite-get-tokens-02 {
+  padding-top: 0px;
+}
+
+.cryptonite-subscription-container {
+  text-transform: none;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cryptonite-subscription-container a {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cryptonite-subscription-container.cryptonite-subscription-claim-tokens {
+  padding-top: 0px;
+}
+
+.cryptonite-tank-you-container {
+  padding: 80px 20px;
+  background-color: #243736;
+  color: #ffffff;
+}
+
+.cryptonite-tank-you-container div {
+  text-align: center;
+  font-size: 16px;
+  padding: 10px;
+  line-height: 26px;
+}
+
+.cryptonite-tank-you-container a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+/* extension trial UI */

@@ -23,9 +23,11 @@ function Cryptonite() {
   this.redShield = chrome.extension.getURL('images/red/cryptonite-icon-16x16.png');
   this.greenShield = chrome.extension.getURL('images/green/cryptonite-icon-16x16.png');
   this.blackShield = chrome.extension.getURL('images/black/cryptonite-icon-16x16.png');
+  this.greyShield = chrome.extension.getURL('images/grey/cryptonite-icon-16x16.png');
 
   this.greenShieldCircular = chrome.extension.getURL('images/green/cryptonite-icon-circular-16x16.png');
   this.blackShieldCircular = chrome.extension.getURL('images/black/cryptonite-icon-circular-16x16.png');
+  this.greyShieldCircular = chrome.extension.getURL('images/grey/cryptonite-icon-circular-16x16.png');
 }
 
 Cryptonite.prototype = {
@@ -233,12 +235,10 @@ Cryptonite.prototype = {
     var annotation;
     var annotationTitleText = $.i18n.getString("website_annotation_extension_updated_title", [aData.extensionVersion]);
     var annotationDescriptionTextLink01 =
-      '<a href="https://medium.com/@Paul__Walsh/protection-against-twitter-scams-b801b08fc3cc" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("website_annotation_extension_updated_description_link_01") + '</a>';
-    var annotationDescriptionTextLink02 =
-      '<a href="https://t.me/metacert" class="cryptonite-extension-updated-description-link" target="_blank">' + $.i18n.getString("website_annotation_extension_updated_description_link_02") + '</a>';
+      '<a href="https://medium.com/p/3a53b1f6fb3c/" class="" target="_blank">' + $.i18n.getString("website_annotation_extension_updated_description_link_01") + '</a>';
+
     var annotationDescriptionText01 = $.i18n.getString("website_annotation_extension_updated_description_01");
-    var annotationDescriptionText02 = $.i18n.getString("website_annotation_extension_updated_description_02", [annotationDescriptionTextLink02]);
-    var cryptoniteImage = chrome.extension.getURL("images/metacert-logo.png");
+    var cryptoniteImage = chrome.extension.getURL("images/logos/metacert-logo-128x128.png");
     var closeMessageParameters = {
       'operation': 'updateBannerClosed'
     };
@@ -248,15 +248,15 @@ Cryptonite.prototype = {
           '<div class="cryptonite-website-extension-updated-content">' +
             '<div class="cryptonite-extension-updated-left"><img src="'+ cryptoniteImage +'"/></div>' +
             '<div class="cryptonite-extension-updated-right">' +
-              '<div class="cryptonite-extension-updated-title">' + annotationTitleText + '</div>' +
+              '<div class="cryptonite-extension-updated-title cryptonite-bold">' + annotationTitleText + '</div>' +
               '<div class="cryptonite-extension-updated-description">' + annotationDescriptionText01 + '</div>' +
-              '<div class="cryptonite-extension-updated-description">' + annotationDescriptionText02 + '</div>' +
+              '<div class="cryptonite-extension-updated-description cryptonite-extension-close-option">' + annotationDescriptionTextLink01 + '</div>' +
             '</div>' +
-            '<div class="cryptonite-extension-updated-close">&times;</div>' +
+            //'<div class="cryptonite-extension-updated-close">&times;</div>' +
           '</div>' +
         '</div>');
 
-    $('.cryptonite-extension-updated-close', annotation).on('click', function() {
+    $('.cryptonite-extension-updated-close, .cryptonite-extension-close-option', annotation).on('click', function() {
       $(cryptonite.rootElement).removeClass('cryptonite-website-annotation-shift');
       $('.cryptonite-website-extension-updated-wrapper').slideUp("fast", function() {
         $('.cryptonite-website-extension-updated-wrapper').remove();
@@ -578,19 +578,29 @@ Cryptonite.prototype = {
       isAccountHeader = true;
     }
 
-    if(flaggedResult.isCryptoGoodCategory) {
-      isVerifiedAccount = "";
-      if(isAccountHeader) {
-        shieldImage = this.greenShield;
-      } else {
-        shieldImage = this.greenShieldCircular;
-      }
-    } else {
+    //check first if the trial is expired, so we display grey shields only
+    if("extensionNotPaid" == aCheckResponse.type) {
       isVerifiedAccount = $.i18n.getString("website_annotation_account_not");
       if(isAccountHeader) {
-        shieldImage = this.blackShield;
+        shieldImage = this.greyShield;
       } else {
-        shieldImage = this.blackShieldCircular;
+        shieldImage = this.greyShieldCircular;
+      }
+    } else {
+      if(flaggedResult.isCryptoGoodCategory) {
+        isVerifiedAccount = "";
+        if(isAccountHeader) {
+          shieldImage = this.greenShield;
+        } else {
+          shieldImage = this.greenShieldCircular;
+        }
+      } else {
+        isVerifiedAccount = $.i18n.getString("website_annotation_account_not");
+        if(isAccountHeader) {
+          shieldImage = this.blackShield;
+        } else {
+          shieldImage = this.blackShieldCircular;
+        }
       }
     }
 

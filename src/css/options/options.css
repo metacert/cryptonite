@@ -52,8 +52,12 @@ body, html {
   margin-left: 60px;
 }
 
+#cryptonite-settings-wrapper,
 #cryptonite-chatbot-wrapper,
-#cryptonite-beta-program-wrapper {
+#cryptonite-beta-program-wrapper,
+#cryptonite-purchase-registration-data-entry,
+#cryptonite-purchase-registration-data-display,
+#cryptonite-chatbot {
   display: none;
 }
 
@@ -184,6 +188,38 @@ li a, li a:visited {
   margin-right: 10px;
 }
 
+/* purchase form content */
+#cryptonite-purchase-registration-wrapper .cryptonite-hint {
+  margin-top: 40px;
+}
+
+#cryptonite-purchase-registration-form * {
+  margin-top: 10px;
+}
+
+#cryptonite-purchase-registration-form .cryptonite-purchase-registration-loading-image {
+  margin-top: 0px;
+}
+
+.cryptonite-purchase-registration-error {
+  visibility: hidden;
+  color: #ff0000;
+}
+
+.cryptonite-purchase-registration-social-media-images a {
+  text-decoration: none;
+}
+
+.cryptonite-purchase-registration-social-media-image {
+  height: 22px;
+  margin-right: 6px;
+}
+
+#options-purchase-registration-plan-name,
+#options-purchase-registration-subscription-id {
+  font-weight: bold;
+}
+
 
 /* new and responsive settings page */
 #cryptonite-menu {
@@ -300,6 +336,7 @@ li a, li a:visited {
   /* width: 100% */
 }
 
+#cryptonite-purchase-registration-form #cryptonite-purchase-registration-code,
 .cryptonite-beta-program-form #cryptonite-beta-program-email {
   min-width: 200px;
   width: 400px;
@@ -354,6 +391,7 @@ li a, li a:visited {
   display: none;
 }
 
+.cryptonite-purchase-registration-loading-image,
 .cryptonite-beta-program-loading-image {
     display: none;
     width: 12px;
