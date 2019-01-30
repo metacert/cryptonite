@@ -4,13 +4,14 @@ Cryptonite is a browser extension (add-on) designed to protect users from malici
 
 When the shield turns green, users can be confident the website they're visiting is a trusted resource verified by MetaCert. When users visit a malicious or phishing URL, it directs them to a block page with a warning that they're about to visit a known malicious resource.
 
-Cryptonite is powered by the [MetaCert Protocol](https://metacertprotocol.com), one of the world's largest threat intelligence databases. Cryptonite is available for Google Chrome, Mozilla Firefox and Opera.
+Cryptonite is powered by the [MetaCert Protocol](https://metacertprotocol.com), one of the world's largest threat intelligence databases. Cryptonite is available for Google Chrome, Brave, Mozilla Firefox and Opera.
 
 # How to install the add-on
 
 1. You can either download the project files as a ZIP file or check the project files.
 2. Open your browser and load the files into the browser as an unpacked extension:
   - On Chrome: go to `chrome://extensions/` select the option `LOAD UNPACKED` and then select the `src` folder from the project
+  - On Brave: go to `chrome://extensions/` select the option `LOAD UNPACKED` and then select the `src` folder from the project
   - On Opera: go to `about://extensions`  select the option `Load Unpacked Extension` and then select the `src` folder from the project
   - On Firefox: go to `about:debugging#addons` select the option `Load Temporary Addon...` and then select the `manifest.json` file from inside the `src` folder from the project
 
